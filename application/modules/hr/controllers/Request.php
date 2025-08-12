@@ -906,6 +906,10 @@ class Request extends MY_Controller
 			$txtremarks = $arrPost['txtremarks'];
 		endif;
 
+		$arr_educ = array();
+		$arr_personal = array();
+		$arr_service = array();
+
 		if ($_GET['status'] == 'profile') :
 			$arr_personal = array(
 				'surname' => 	$pds_details[1],
@@ -985,7 +989,7 @@ class Request extends MY_Controller
 				'graduated' 	=> 	$pds_details[10],
 				'yearGraduated' => 	$pds_details[11]
 			);
-			if ($pds_details[12] == '') :
+			if (!isset($pds_details[12]) || $pds_details[12] == '') :
 				$this->update_pds_model->save_school($arr_educ);
 			else :
 				$this->update_pds_model->update_school($arr_educ, $pds_details[12]);
