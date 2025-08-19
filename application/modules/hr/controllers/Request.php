@@ -976,18 +976,18 @@ class Request extends MY_Controller
 		if ($_GET['status'] == 'educ') :
 
 			$arr_educ = array(
-				'empNumber'		=>  $arrrequest['empNumber'],
-				'levelCode' 	=> 	$pds_details[1],
-				'schoolName' 	=> 	$pds_details[2],
-				'courseCode' 	=> 	$pds_details[3],
-				'schoolFromDate' => 	$pds_details[4],
-				'schoolToDate' 	=> 	$pds_details[5],
-				'units' 		=> 	$pds_details[6],
-				'ScholarshipCode' =>	$pds_details[7],
-				'honors' 		=> 	$pds_details[8],
-				'licensed' 		=> 	$pds_details[9],
-				'graduated' 	=> 	$pds_details[10],
-				'yearGraduated' => 	$pds_details[11]
+				'empNumber'        => $arrrequest['empNumber'],
+    				'levelCode'        => isset($pds_details[1]) ? $pds_details[1] : '',
+			        'schoolName'       => isset($pds_details[2]) ? $pds_details[2] : '',
+			        'courseCode'       => isset($pds_details[3]) ? $pds_details[3] : '',
+			        'schoolFromDate'   => isset($pds_details[4]) ? $pds_details[4] : '',
+			        'schoolToDate'     => isset($pds_details[5]) ? $pds_details[5] : '',
+			        'units'            => isset($pds_details[6]) ? $pds_details[6] : '',
+			        'ScholarshipCode'  => isset($pds_details[7]) ? $pds_details[7] : 'NONE', // Default to 'NONE'
+			        'honors'           => isset($pds_details[8]) ? $pds_details[8] : '',
+			        'licensed'         => isset($pds_details[9]) ? $pds_details[9] : '',
+			        'graduated'        => isset($pds_details[10]) ? $pds_details[10] : '',
+			        'yearGraduated'    => isset($pds_details[11]) ? $pds_details[11] : ''
 			);
 			if (!isset($pds_details[12]) || $pds_details[12] == '') :
 				$this->update_pds_model->save_school($arr_educ);
