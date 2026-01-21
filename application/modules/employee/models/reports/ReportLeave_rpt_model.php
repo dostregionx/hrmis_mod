@@ -16,14 +16,16 @@ class ReportLeave_rpt_model extends CI_Model {
     public function getLatestBalance($empNumber)
 	{
 		$this->db->where("empNumber",$empNumber);
-		$this->db->order_by('lb_id DESC');
+		//$this->db->order_by('lb_id DESC');
+		$this->db->order_by('periodYear', 'DESC');
+    		$this->db->order_by('periodMonth', 'DESC');
 		$res = $this->db->get('tblempleavebalance')->result_array();
-		
-        if (count($res) > 1) {
-            return $res[1];
-        }else{
-            return $res[0];
-        }
+		return count($res) > 0 ? $res[0] : array();
+        //if (count($res) > 1) {
+        //    return $res[1];
+        //}else{
+        //    return $res[0];
+        //}
 	}
 
     public function getleave_details($requestid){
@@ -461,7 +463,6 @@ class ReportLeave_rpt_model extends CI_Model {
 
 
         $latestBalance = $this->getLatestBalance($leaveDetails['empNumber']);
-
 
         $this->fpdf->Ln(6);
         $this->fpdf->SetFont('Arial', "", 8.5);	

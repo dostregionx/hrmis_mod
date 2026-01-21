@@ -490,13 +490,29 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
 	            break;
 	    }
 
-	    // Validation: Restrict non-SL if filed within 5 days
-	    if (leaveType !== 'sl') {
+	    // Validation: Restrict non-SL/sppl if filed within 5 days
+	    if (leaveType !== 'sl' && leaveType !== 'sppl') {
 	        const timeDiff = parsedLeaveFrom.getTime() - today.getTime();
 	        const diffDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
 	        if (diffDays < 5) {
 	            alert("Leave must be filed at least 5 days in advance.");
+	            $("#btn-request-leave").attr("disabled", false);
+	            e.preventDefault();
+	            return;
+	        }
+	    }
+
+	    if (leaveType === 'sppl') {
+		// date-only (avoid time issues)
+       	        const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+	        const leaveFromDateOnly = new Date(parsedLeaveFrom.getFullYear(), parsedLeaveFrom.getMonth(), parsedLeaveFrom.getDate());
+
+	        let allowedLastFilingDay = new Date(leaveFromDateOnly);
+	        allowedLastFilingDay.setDate(allowedLastFilingDay.getDate() + 5);
+
+	        if (todayDateOnly > allowedLastFilingDay) {
+	            alert("SPPL must be filed within 5 days from the leave date.");
 	            $("#btn-request-leave").attr("disabled", false);
 	            e.preventDefault();
 	            return;
@@ -547,7 +563,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
 	});
 
         $('#printreport').click(function(){
-            var leavetype=$('#strLeavetype').val();
+0            var leavetype=$('#strLeavetype').val();
             var day=$('#strDay').val();
             var leavefrom=$('#dtmLeavefrom').val();
             var leaveto=$('#dtmLeaveto').val();

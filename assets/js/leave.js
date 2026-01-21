@@ -85,6 +85,9 @@ $(document).ready(function () {
 				// $("#strReason").attr("required", false);
 				$("#strReason").val("");
 				break;
+			case "wl":
+				$("#reason_textbox").show();
+				break;
 			default:
 				hide_all();
 				$("#strReason").val("");

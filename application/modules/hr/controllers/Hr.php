@@ -235,7 +235,7 @@ class Hr extends MY_Controller {
 			$strBirthPlace=$arrPost['strBirthPlace'];
 			$strSex=$arrPost['strSex'];
 			$strCvlStatus=$arrPost['strCvlStatus'];
-			$strCitizenship=$arrPost['strCitizenship'];
+			$strCitizenship=$arrPost['strCitizenship'] ?? '';
 			$strHeight=$arrPost['strHeight'];
 			$strWeight=$arrPost['strWeight'];
 			$strBloodType=$arrPost['strBloodType'];

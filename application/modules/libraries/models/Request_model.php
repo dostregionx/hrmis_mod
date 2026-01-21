@@ -857,6 +857,101 @@ class Request_model extends CI_Model
 			return $head;
 		}
 	}
-	
+//
+//	public function certify_request($request_id, $empno)
+//	{
+//    		$req = $this->db->where('requestID', $request_id)
+//        		->get('tblemprequest')
+//        		->row_array();
+//
+//    		if (!$req) return false;
+//
+//    		$signatories = $this->get_signatory($req['requestflowid']);
+//    		if (!$signatories) return false;
+//
+//    		$dtMap = [
+//        		'SignatoryCountersign' => 'SigCDateTime',
+//        		'Signatory1' => 'Sig1DateTime',
+//        		'Signatory2' => 'Sig2DateTime',
+//        		'Signatory3' => 'Sig3DateTime',
+//        		'SignatoryFin' => 'SigFinDateTime',
+//    		];
+//
+//    		foreach ($dtMap as $key => $dtField) {
+//        		if (empty($req[$key])) {
+//            			$this->db->where('requestID', $request_id)
+//                			->update('tblemprequest', [
+//                    				$key => $empno,
+//                    				$dtField => date('Y-m-d H:i:s'),
+//                    				'requestStatus' => 'Certified'
+//                			]);
+//
+//            			return $this->db->affected_rows() > 0;
+//        		}
+//    		}
+//
+//    		return false;
+//	}
+
+public function certify_request($request_id, $empno, $type = 'OB')
+{
+    // get request row
+    $req = $this->db->where('requestID', $request_id)
+        ->get('tblemprequest')
+        ->row_array();
+    if (!$req) return false;
+
+    // get flow row for this request
+    $flow = $this->get_signatory($req['requestflowid']);
+    if (empty($flow)) return false;
+
+    // signatory field -> datetime field map (matches your table schema)
+    $dtMap = [
+        'SignatoryCountersign' => 'SigCDateTime',
+        'Signatory1'           => 'Sig1DateTime',
+        'Signatory2'           => 'Sig2DateTime',
+        'Signatory3'           => 'Sig3DateTime',
+        'SignatoryFin'         => 'SigFinDateTime',
+    ];
+
+    // Determine the TRUE next required signatory key based on flow + current request state
+    $nextKey = null;
+    foreach ($dtMap as $key => $dtField) {
+        // Flow field format is usually: action;name;empNo (or something similar)
+        $parts = !empty($flow[$key]) ? explode(';', $flow[$key]) : ['', '', ''];
+        $flowEmpNo = $parts[2] ?? '';
+
+        // If flow slot has no assigned empNo, skip it entirely
+        if ($flowEmpNo === '') continue;
+
+        // First required slot that is still empty in the request is the "next"
+        if (empty($req[$key])) {
+            $nextKey = $key;
+            $nextFlowEmpNo = $flowEmpNo;
+            break;
+        }
+    }
+
+    // If no next signatory slot remains, nothing to certify
+    if ($nextKey === null) return false;
+
+    // STRICT: only allow if the logged-in empno matches the next signatory's empno in the flow
+    if ((string)$nextFlowEmpNo !== (string)$empno) {
+        return false;
+    }
+
+    // Update ONLY that specific slot + its datetime
+    $dtField = $dtMap[$nextKey];
+
+    $this->db->where('requestID', $request_id)
+        ->update('tblemprequest', [
+            $nextKey        => $empno,
+            $dtField        => date('Y-m-d H:i:s'),
+            'requestStatus' => 'Certified'
+        ]);
+
+    return $this->db->affected_rows() > 0;
+}
+
 	
 }

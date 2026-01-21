@@ -1146,4 +1146,43 @@ class Request extends MY_Controller
 
 		redirect('hr/request?request=pds&status=All');
 	}
+
+	/**
+         * Bulk certify multiple OB requests
+         */
+    	public function bulk_certify()
+	{
+    		$ids = $this->input->post('request_ids');
+    		$empno = $this->session->userdata('sessEmpNo');
+
+    		if (empty($ids) || !is_array($ids)) {
+        		echo json_encode(['status' => 'error', 'message' => 'No requests selected']);
+        		return;
+    		}
+
+    		$success = 0;
+    		$failed = [];
+
+    		foreach ($ids as $id) {
+        		try {
+            			if ($this->Request_model->certify_request($id, $empno)) {
+                			$success++;
+            			} else {
+                			$failed[] = $id;
+            			}
+        		} catch (Exception $e) {
+            			$failed[] = $id;
+            			log_message('error', 'Bulk certify failed for request ID ' . $id . ': ' . $e->getMessage());
+        		}
+    		}
+
+    		$response = [
+        		'status' => 'ok',
+        		'certified' => $success,
+        		'total' => count($ids),
+        		'failed' => $failed
+    		];
+
+    		echo json_encode($response);
+	}
 }

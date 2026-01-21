@@ -1,21 +1,32 @@
 <div class="pull-right" style="margin-top: -15px;margin-bottom: 15px;">
     <div class="btn-group">
-        <a class="btn green dropdown-toggle" href="<?=base_url('hr/request?status=All'.'&request='.$_GET['request'])?>" data-toggle="dropdown">
+        <a class="btn green dropdown-toggle" href="<?=base_url('hr/request?status=All'.'&request='.htmlspecialchars($_GET['request'] ?? ''))?>" data-toggle="dropdown">
             <i class="fa fa-<?=$notif_icon[$active_menu]?>"></i> &nbsp;<?=$active_menu == 'All' ? 'All Requests' : $active_menu?> <i class="fa fa-angle-down"></i>
         </a>
         <ul class="dropdown-menu pull-right">
             <?php foreach($arrNotif_menu as $notif):?>
-                    <li>
-                        <a href="<?=base_url('hr/request?status='.$notif.'&request='.$_GET['request'])?>">
-                            <i class="fa fa-<?=$notif_icon[$notif]?>"></i> <?=$notif == 'All' ? 'All Requests' : $notif?> </a>
-                    </li>
+                <li>
+                    <a href="<?=base_url('hr/request?status='.$notif.'&request='.htmlspecialchars($_GET['request'] ?? ''))?>">
+                        <i class="fa fa-<?=$notif_icon[$notif]?>"></i> <?=$notif == 'All' ? 'All Requests' : $notif?> 
+                    </a>
+                </li>
             <?php endforeach; ?>
         </ul>
     </div>
 </div>
-<table class="table table-striped table-bordered table-condensed  table-hover table-checkable order-column" id="table-ob">
+
+<div class="pull-left" style="margin-bottom:15px;">
+    <button class="btn btn-sm green" id="btn-bulk-certify">
+        <i class="icon-check"></i> Certify Selected
+    </button>
+</div>
+
+<table class="table table-striped table-bordered table-condensed table-hover table-checkable order-column" id="table-ob">
     <thead>
         <tr>
+            <th style="width:40px; text-align:center;">
+                <input type="checkbox" id="select-all">
+            </th>
             <th style="width: 100px;text-align:center;"> No. </th>
             <th style="text-align: center;"> Employee </th>
             <th style="text-align: center;"> Request Date </th>
@@ -34,6 +45,9 @@
     <tbody>
     <?php $i=1; foreach($arrob_request as $row): $req_details = explode(';',$row['requestDetails']);?>
         <tr class="odd gradeX">
+            <td align="center">
+                <input type="checkbox" class="req-check" value="<?=$row['requestID']?>">
+            </td>
             <td align="center"> <?=$i++?> </td>
             <td> <?=employee_name($row['empNumber'])?> </td>
             <td align="center"> <?=date('F d, Y',strtotime($row['requestDate']))?> </td>
@@ -41,9 +55,9 @@
             <?php if(isset($_GET['status'])): if($_GET['status']=='Disapproved'): ?>
                 <td align="center"> <?=$row['remarks']?> </td>
             <?php endif; endif; ?>
-            <td align="center"> 
+            <td align="center">
                 <?php if(!in_array(strtolower($row['requestStatus']), array('disapproved','cancelled'))): ?>
-                    <?=$row['next_signatory']['next_sign']?> 
+                    <?=$row['next_signatory']['next_sign']?>
                 <?php endif; ?>
             </td>
             <td align="center" nowrap>
@@ -53,14 +67,11 @@
 
                 if ($req_details[2] != $req_details[3]) {
                     if (date('Y-m', $start_date) == date('Y-m', $end_date)) {
-                        // Same month and year, display only the month
                         echo date('F', $start_date).' '.date('d', $start_date).'-'.date('d', $end_date).', '.date('Y', $end_date);
                     } else {
-                        // Different month or year, display full date range
                         echo date('F d, Y', $start_date) . ' <b>to</b> ' . date('M. d, Y', $end_date);
                     }
                 } else {
-                    // If same exact date, show only one date
                     echo $req_details[2] != '' ? date('F d, Y', $start_date) : '';
                 }
             ?></td>
@@ -82,7 +93,8 @@
                               <a class="showless small" href="javascript:;" style="display: none;"><u>show less</u></a>';
                     else:
                         echo $req_details[6];
-                    endif; ?></td>
+                    endif; ?>
+            </td>
             <td>
                 <?php
                     if(strlen($req_details[7]) > 30):
@@ -92,18 +104,18 @@
                               <a class="showless small" href="javascript:;" style="display: none;"><u>show less</u></a>';
                     else:
                         echo $req_details[7];
-                    endif; ?></td>
+                    endif; ?>
+            </td>
             <td width="150px" style="white-space: nowrap;text-align: center;">
                 <a class="btn btn-sm grey-cascade" id="printreport" data-rdate="<?=$row['requestDate']?>" data-empnum="<?=$row['empNumber']?>" data-id="<?=$row['requestID']?>"
                     data-rid='<?=$row['requestID']?>' data-rattach='<?=$row['file_location']?>'>
                     <span class="icon-magnifier" title="View"></span> View</a>
                 <?php if(!in_array(strtolower($row['requestStatus']), array('certified','disapproved', 'cancelled')) && $row['next_signatory']['display'] == 1): ?>
-                    <a class="btn btn-sm blue" id="btncertify" data-id="<?=$row['requestID']?>"><span class="icon-check"></span> 
+                    <a class="btn btn-sm blue" id="btncertify" data-id="<?=$row['requestID']?>"><span class="icon-check"></span>
                         <?= strtolower($row['next_signatory']['action']) == "certified" ? "Certify" : ""; ?>
                         <?= strtolower($row['next_signatory']['action']) == "recommended" ?  "Recommend" : ""; ?>
                         <?= strtolower($row['next_signatory']['action']) == "approved" ? "Approve" : ""; ?>
                     </a>
-                            
                     <a class="btn btn-sm btn-danger" id="btndisapproved" data-id="<?=$row['requestID']?>"><span class="icon-close" title="Cancel"></span> Disapprove</a>
                 <?php endif; ?>
             </td>
@@ -175,11 +187,12 @@
 
 <script>
     $(document).ready(function() {
-        $('#table-ob').dataTable( {
+        $('#table-ob').dataTable({
             "initComplete": function(settings, json) {
                 $('.loading-image').hide();
                 $('#request_view').show();
-            }} );
+            }
+        });
 
         /* ellipsis*/
         $('#table-ob').on('click', 'a.showmore', function() {
@@ -192,6 +205,53 @@
             $(this).closest('td').find('.fulltext').hide();
             $(this).hide();
         });
-            
+
+        // Select all toggle
+        $('#select-all').on('click', function() {
+            $('.req-check').prop('checked', this.checked);
+        });
+
+        // Bulk certify click
+        $('#btn-bulk-certify').on('click', function() {
+            var ids = [];
+            $('.req-check:checked').each(function() {
+                ids.push($(this).val());
+            });
+
+            if(ids.length === 0) {
+                alert('Please select at least one request.');
+                return;
+            }
+
+            if(confirm("Are you sure you want to certify selected requests?")) {
+                $.ajax({
+                    url: "<?=base_url('hr/request/bulk_certify')?>",
+                    type: "POST",
+                    data: {
+                    	request_ids: ids,
+                    	// ✅ Include CSRF token for CodeIgniter
+                    	"<?=$this->security->get_csrf_token_name()?>": "<?=$this->security->get_csrf_hash()?>"
+                    },
+                    success: function (resp) {
+                    	try {
+                            var data = JSON.parse(resp);
+                            if (data.status === 'ok' || data.status === 'success') {
+                            	alert("Certified " + data.certified + " of " + data.total + " requests.");
+                   		location.reload();
+                            } else {
+                            	alert("Error: " + (data.message || "Unable to process requests."));
+                            }
+                    	} catch (e) {
+                            console.error("Invalid JSON response:", resp);
+                            alert("Unexpected server response.");
+                    	}
+                    },
+                    error: function (xhr) {
+                    	console.error("Bulk certify error:", xhr.responseText);
+                    	alert("Error occurred while processing bulk certification.");
+                    }
+                });
+            }
+        });
     });
 </script>

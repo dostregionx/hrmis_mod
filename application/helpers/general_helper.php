@@ -493,8 +493,8 @@ if (!function_exists('sendemail_new_request')) {
         $config = array(
             'protocol'  => 'smtp',
             'smtp_host' => 'smtp.gmail.com', // Your SMTP host
-            'smtp_user' => 'rocabalunajr@region10.dost.gov.ph', // SMTP username
-            'smtp_pass' => 'quqa cwlj qxhr etha', // SMTP password
+            'smtp_user' => getenv('SMTP_USER'), // SMTP username
+            'smtp_pass' => getenv('SMTP_PASS'), // SMTP password
             'smtp_port' => 587, // Use 465 for SSL, 587 for TLS
             'smtp_crypto' => 'tls', // Use 'ssl' for SSL
             'mailtype'  => 'html',
@@ -550,8 +550,8 @@ if (!function_exists('sendemail_update_request')) {
         $config = array(
             'protocol'  => 'smtp',
             'smtp_host' => 'smtp.gmail.com', // Your SMTP host
-            'smtp_user' => 'rocabalunajr@region10.dost.gov.ph', // SMTP username
-            'smtp_pass' => 'quqa cwlj qxhr etha', // SMTP password
+            'smtp_user' => getenv('SMTP_USER'), // SMTP username
+            'smtp_pass' => getenv('SMTP_PASS'), // SMTP password
             'smtp_port' => 587, // Use 465 for SSL, 587 for TLS
             'smtp_crypto' => 'tls', // Use 'ssl' for SSL
             'mailtype'  => 'html',
