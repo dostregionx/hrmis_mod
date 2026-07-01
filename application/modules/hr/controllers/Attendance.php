@@ -319,11 +319,13 @@ class Attendance extends MY_Controller
 			endif;
 		endforeach;
 
-		$force_leave = $this->Leave_model->getleave_data('FL');
+		//$force_leave = $this->Leave_model->getleave_data('FL');
+		$force_leave = $this->Leave_model->get_leave_type_limit('FL');
 		$force_leave = empty($force_leave) ? 0 : $force_leave['numOfDays'];
 		$total_force_leave = $force_leave - $ctr_force_leave;
 
-		$spe_leave = $this->Leave_model->getleave_data('PL');
+		//$spe_leave = $this->Leave_model->getleave_data('PL');
+		$spe_leave = $this->Leave_model->get_leave_type_limit('PL');
 		$spe_leave = empty($spe_leave) ? 0 : $spe_leave['numOfDays'];
 		$total_spe_leave = $spe_leave - $ctr_spe_leave;
 		# END DTR
@@ -402,8 +404,9 @@ class Attendance extends MY_Controller
 			$filed_ptl = $this->Leave_model->approved_leave($empid, $datefrom, $dateto, 'PTL');
 			$filed_fl = $this->Leave_model->approved_leave($empid, $datefrom, $dateto, 'FL');
 			$filed_spl = $this->Leave_model->approved_leave($empid, $datefrom, $dateto, 'PL');
+			$filed_wl = $this->Leave_model->approved_leave($empid, $datefrom, $dateto, 'WL');
 
-			$arrLatestBalance = array('lb' => $arrLatestBalance[0], 'vl_abswpay' => $vl_abswpay, 'vl_abswopay' => $vl_abswopay, 'sl_abswopay' => $sl_abswopay, 'filed_vl' => $filed_vl, 'filed_sl' => $filed_sl, 'filed_fl' => $filed_fl, 'filed_stl' => $filed_stl, 'filed_mtl' => $filed_mtl, 'filed_ptl' => $filed_ptl, 'filed_spl' => $filed_spl, 'arr_subs_allowance' => $arr_subs_allowance, 'curr_sl' => $curr_sl, 'curr_vl' => $curr_vl, 'off_bal' => seconds_to_time($arrLatestBalance[0]['off_bal']), 'deduct_vl' => $deduct_vl, 'trut_wopay' => $trut_wopay, 'vl_wopay' => $vl_wopay, 'lb_updatedby' => employee_name($arrLatestBalance[0]['processBy']), 'process_date' => $arrLatestBalance[0]['processDate']);
+			$arrLatestBalance = array('lb' => $arrLatestBalance[0], 'vl_abswpay' => $vl_abswpay, 'vl_abswopay' => $vl_abswopay, 'sl_abswopay' => $sl_abswopay, 'filed_vl' => $filed_vl, 'filed_sl' => $filed_sl, 'filed_fl' => $filed_fl, 'filed_stl' => $filed_stl, 'filed_mtl' => $filed_mtl, 'filed_ptl' => $filed_ptl, 'filed_spl' => $filed_spl, 'filed_wl' => $filed_wl, 'arr_subs_allowance' => $arr_subs_allowance, 'curr_sl' => $curr_sl, 'curr_vl' => $curr_vl, 'off_bal' => seconds_to_time($arrLatestBalance[0]['off_bal']), 'deduct_vl' => $deduct_vl, 'trut_wopay' => $trut_wopay, 'vl_wopay' => $vl_wopay, 'lb_updatedby' => employee_name($arrLatestBalance[0]['processBy']), 'process_date' => $arrLatestBalance[0]['processDate']);
 		else :
 		# NO LEAVE BALANCE
 		endif;
@@ -472,6 +475,8 @@ class Attendance extends MY_Controller
 				'ptlPreBalance' => $arrLatestBalance['lb']['ptlPreBalance'],
 				'stlBalance' 	=> $arrLatestBalance['lb']['stlBalance'],
 				'stlPreBalance' => $arrLatestBalance['lb']['stlPreBalance'],
+				'wlBalance'    => $arrLatestBalance['lb']['wlBalance'],
+				'wlPreBalance' => $arrLatestBalance['lb']['wlPreBalance'],
 				'numOfPerdiem' => $arrPost['txtamt_training'],
 				'ctr_8h' 		=> $arrPost['txtsubs_8hrs'],
 				'ctr_6h' 		=> $arrPost['txtsubs_6hrs'],
@@ -506,7 +511,9 @@ class Attendance extends MY_Controller
 				'slAbsUndWoPay' => $arrPost['sl_ut_wopay'],
 				'off_bal' 		=> $arrPost['off_bal'],
 				'flBalance' 	=> $arrPost['fl_bal'],
-				'plBalance' 	=> $arrPost['pl_bal']
+				'plBalance' 	=> $arrPost['pl_bal'],
+				'wlBalance'    => $arrPost['wl_bal'],
+				'wlPreBalance' => $arrPost['wl_bal']
 			);
 			$this->Leave_model->addLeaveBalance($arrData);
 			$this->session->set_flashdata('strSuccessMsg', 'Leave balance added successfully.');
@@ -533,6 +540,7 @@ class Attendance extends MY_Controller
 				'slAbsUndWoPay' 	 => $arrPost['txtauwop_sl'],
 				'plBalance' 		 => $arrPost['txtspe_curr'],
 				'flBalance' 		 => $arrPost['txtfl_curr'],
+				'wlBalance' 		 => $arrPost['txtwl_curr'],
 				'stlBalance' 		 => $arrPost['txtsdl_curr'],
 				'mtlBalance' 		 => $arrPost['txtmtl_curr'],
 				'ptlBalance' 		 => $arrPost['txtptl_curr'],

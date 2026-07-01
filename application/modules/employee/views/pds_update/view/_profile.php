@@ -421,7 +421,7 @@
 	    	<?php if(check_module() == 'employee' || check_module() == 'officer' || check_module() == 'executive'):  ?> 
 	    		<a href="<?=base_url('employee/pds_update')?>" class="btn blue"></i> Back</a>
 		    <?php else: ?>
-		        <a type="submit" class="btn btn-success" id="btn-request-profile" href="<?=base_url('hr/request/certify_pds?status=educ&req_id='.$_GET['req_id'].'&type=profile')?>">
+		        <a type="submit" class="btn btn-success" id="btn-request-profile" href="<?=base_url('hr/request/certify_pds?status=profile&req_id='.$_GET['req_id'])?>">
 		            <i class="icon-check"></i> Certify</a>
 		        <a href="<?=base_url('hr/request?request=pds')?>" class="btn blue"> <i class="icon-ban"></i> Cancel</a>
 		    <?php endif; ?>

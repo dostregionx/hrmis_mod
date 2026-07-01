@@ -10,8 +10,15 @@ $(document).ready(function() {
             var total_error = 0;
 
             total_error = total_error + check_str($('#txtauwp_vl')) + check_str($('#txtauwp_sl')) + check_str($('#txtperiod_vl')) + check_str($('#txtperiod_sl')) + check_str($('#txtauwop_vl')) + check_str($('#txtauwop_sl'));
-            total_error = total_error + check_str($('#txtspe_curr')) + check_str($('#txtfl_curr')) + check_str($('#txtsdl_curr')) + check_str($('#txtmtl_curr')) + check_str($('#txtptl_curr'));
-            total_error = total_error + check_str($('#txtlaundry')) + check_str($('#txtsubs_8hrs')) + check_str($('#txtsubs_6hrs')) + check_str($('#txtsubs_5hrs')) + check_str($('#txtsubs_4hrs')) + check_str($('#txtwith_meal')) + check_str($('#txtamt_training'));
+            //total_error = total_error + check_str($('#txtspe_curr')) + check_str($('#txtfl_curr')) + check_str($('#txtsdl_curr')) + check_str($('#txtmtl_curr')) + check_str($('#txtptl_curr'));
+            total_error = total_error
+		    + check_str($('#txtspe_curr'))
+		    + check_str($('#txtfl_curr'))
+		    + check_str($('#txtwl_curr'))
+		    + check_str($('#txtsdl_curr'))
+		    + check_str($('#txtmtl_curr'))
+		    + check_str($('#txtptl_curr'));
+	    total_error = total_error + check_str($('#txtlaundry')) + check_str($('#txtsubs_8hrs')) + check_str($('#txtsubs_6hrs')) + check_str($('#txtsubs_5hrs')) + check_str($('#txtsubs_4hrs')) + check_str($('#txtwith_meal')) + check_str($('#txtamt_training'));
             total_error = total_error + check_str($('#txtlate_ut_days')) + check_str($('#txtdays_awol')) + check_str($('#txtdays_present')) + check_str($('#txtdays_absent'));
             total_error = total_error + check_time($('#txtlate_ut_hhmm'))  + check_time($('#txtbalance')) + check_time($('#txtgain')) + check_time($('#txtused'));
 
@@ -78,6 +85,11 @@ $(document).ready(function() {
         $('.fl_filed').html(lb_data['filed_fl']);
         $('.fl_curr').html(lb_data['flBalance']);
         $('#txtfl_curr').val(lb_data['flBalance']);
+	/* Wellness Leave */
+	$('.wl_prev').html(lb_data['wlPreBalance']);
+	$('.wl_filed').html(lb_data['filed_wl']);
+	$('.wl_curr').html(lb_data['wlBalance']);
+	$('#txtwl_curr').val(lb_data['wlBalance']);
         // /* Study Leave */
         // $('.sdl_prev').html(lb_data['stlPreBalance']);
         // $('.sdl_filed').html(lb_data['filed_stl']);
@@ -186,6 +198,11 @@ $(document).ready(function() {
         $('.fl_filed').html(latest_lb['filed_fl']);
         $('.fl_curr').html(parseFloat(latest_lb['lb']['flBalance']) - parseFloat(latest_lb['filed_fl']));
         $('#txtfl_curr').val(parseFloat(latest_lb['lb']['flBalance']) - parseFloat(latest_lb['filed_fl']));
+	/* Wellness Leave */
+	$('.wl_prev').html(latest_lb['lb']['wlBalance']);
+	$('.wl_filed').html(latest_lb['filed_wl']);
+	$('.wl_curr').html(parseFloat(latest_lb['lb']['wlBalance']) - parseFloat(latest_lb['filed_wl']));
+	$('#txtwl_curr').val(parseFloat(latest_lb['lb']['wlBalance']) - parseFloat(latest_lb['filed_wl']));
         /* Study Leave */
         $('.sdl_prev').html(latest_lb['lb']['stlBalance']);
         $('.sdl_filed').html(latest_lb['filed_stl']);

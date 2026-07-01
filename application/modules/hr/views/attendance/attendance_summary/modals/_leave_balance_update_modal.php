@@ -130,6 +130,19 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+						<tr>
+						    <td>Wellness Leave</td>
+						    <td align="center" class="wl_prev"></td>
+						    <td align="center" class="wl_filed"></td>
+						    <td id="tdn-or" align="center" class="wl_curr"></td>
+						    <td id="tdor" style="padding-bottom: 0px;">
+						        <div class="form-group">
+						            <div class="input-icon right">
+						                <input type="text" class="form-control input-sm" name="txtwl_curr" id="txtwl_curr">
+						            </div>
+						        </div>
+						    </td>
+						</tr>
                                                 <!-- <tr>
                                                     <td>Study Leave</td>
                                                     <td align="center" class="sdl_prev"></td>

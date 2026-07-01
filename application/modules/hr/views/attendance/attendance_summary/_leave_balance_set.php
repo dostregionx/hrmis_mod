@@ -82,6 +82,12 @@
                                     <input type="number" class="form-control" name="pl_bal" id="pl_bal" value="0" step="any">
                                 </div>
                             </div>
+			    <div class="form-group">
+				<label class="control-label">Wellness Leave Balance <span class="required"> * </span></label>
+				<div class="input-icon right">
+				    <input type="number" class="form-control" name="wl_bal" id="wl_bal" value="0" step="any">
+				</div>
+			    </div>
                             <!-- end others leave -->
 
                             <div class="row">

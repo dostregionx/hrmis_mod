@@ -1,5 +1,5 @@
-<?php 
-/** 
+<?php
+/**
 Purpose of file:    Leave View
 Author:             Rose Anne L. Grefaldeo
 System Name:        Human Resource Management Information System Version 10
@@ -45,8 +45,8 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                 </div>
             </div>
             <div class="portlet-body">
-                
-                
+
+
             <?php
                 if (!$arrBalance) {
                     echo "No set leave balance. Please contact HR Unit.";
@@ -82,7 +82,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                                 <td colspan="5"><?=strtoupper($permonth)?>, <?=strtoupper($peryear)?></td>
                             </tr>
                             <tr>
-                                
+
                                 <th width="18%">Sick Leave left</th>
                                 <td colspan="2" width="11%"><?=$slBalance==""?0:number_format($arrBalance['slBalance'],3)?></td>
                                 <th width="18%">Vacation Leave left</th>
@@ -114,7 +114,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                 <div class="row" id="wholeday_textbox" <?=$action=='add'?'hidden':''?>>
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <?php 
+                            <?php
                                 $strday = 'whole day';
                                 if(count($leave_details) > 9):
                                     $strday = strtolower($leave_details[9]) == 'half day' ? 'half day' : 'whole day';
@@ -164,7 +164,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                     </div>
                 </div>
                 <div class="row" id="incaseVL_textbox" <?=$action=='add'?'hidden':(count($leave_details) > 0 ? $leave_details[0] == 'vl' ? '' : 'hidden' : '')?>>
-                    <?php 
+                    <?php
                         $vl_case = '';
                         if(count($leave_details) > 0):
                             $vl_case = $leave_details[8] == '' ? '' : ($leave_details[8] == 'within the country' ? 'local' : 'abroad');
@@ -182,7 +182,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                     </div>
                 </div>
                 <div class="row" id="incaseSL_textbox" <?=$action=='add'?'hidden':(count($leave_details) > 0 ? $leave_details[0] == 'sl' ? '' : 'hidden' : '')?>>
-                    <?php 
+                    <?php
                         $sl_case = '';
                         if(count($leave_details) > 0):
                             $sl_case = $leave_details[7] == '' ? '' : ($leave_details[7] == 'in patient' ? 'in' : 'out');
@@ -200,7 +200,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                     </div>
                 </div>
                 <div class="row" id="incaseSTL_textbox" <?=$action=='add'?'hidden':(count($leave_details) > 0 ? $leave_details[0] == 'stl' ? '' : 'hidden' : '')?>>
-                    <?php 
+                    <?php
                         $stl_case = '';
                         if(count($leave_details) > 0):
                             $stl_case = $leave_details[8] == '' ? '' : ($leave_details[8] == "completion of master's degree" ? 'masters' : 'board');
@@ -217,7 +217,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row" id="reason_textbox" <?=$action=='add'?'hidden':''?>>
                     <div class="col-sm-9">
                         <div class="form-group">
@@ -226,7 +226,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row" id="commutation_box" <?=$action=='add'?'hidden':''?>>
                     <div class="col-sm-9">
                         <div class="form-group">
@@ -277,7 +277,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                         <div class="form-group">
                             <a class='btn blue-madison' href='javascript:;'>
                                 <i class="fa fa-upload"></i> Attach File
-                                <input type="file" name ="userfile[]" id= "userfile" multiple 
+                                <input type="file" name ="userfile[]" id= "userfile" multiple
                                     style='left: 16px !important;width: 108px;height: 34px;position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
                                     name="file_source" size="40">
                             </a>
@@ -392,7 +392,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
 <script>
     $(document).ready(function() {
         $('#upload-error').hide();
-        
+
         $('a#btn-attach').on('click',function() {
             var id = $(this).data('id');
             $('#txtleave_attach_id').val(id);
@@ -400,7 +400,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
         });
 
         if("<?=$action?>" == "add"){
-            $('.div-actions').hide();    
+            $('.div-actions').hide();
         }else{
             $('.div-actions').show();
         }
@@ -425,6 +425,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                 $('#txtdgstorage').val('MB');
                 $('#upload-size').html('Total Filesize: '+Math.floor(total_size/1000000)+' MB');
             }
+
             $('#upload-file-info').html(fnames+'</ul>');
 
             if($('#txtdgstorage').val() == 'MB' || $('#txtdgstorage').val() == 'KB') {
@@ -436,134 +437,174 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
             }else{
                 $('#upload-error').show();
             }
-
         });
 
+        function dateOnly(date) {
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        }
 
-        // $("#strLeavetype").change(function (e) { 
+        function isWorkingDay(date) {
+            var day = date.getDay();
 
-        //     $("#strIncaseVL").val("");
-        //     $("#strIncaseSL").val("");
-        //     $("#strIncaseSTL").val("");
+            // Compressed Work Week:
+            // 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday
+            // Friday, Saturday, Sunday are non-working days
+            return [1, 2, 3, 4].includes(day);
+        }
 
-        //     $(".btn.dropdown-toggle[data-id='strIncaseVL'] .filter-option").text("-- SELECT --");
-        //     $(".btn.dropdown-toggle[data-id='strIncaseSL'] .filter-option").text("-- SELECT --");
-        //     $(".btn.dropdown-toggle[data-id='strIncaseSTL'] .filter-option").text("-- SELECT --");
+        function addWorkingDays(date, days) {
+            var result = new Date(date);
+            var added = 0;
 
-        // });
+            while (added < days) {
+                result.setDate(result.getDate() + 1);
 
-	$("#frmLeave").submit(function (e) {
-	    $("#btn-request-leave").attr("disabled", true);
+                if (isWorkingDay(result)) {
+                    added++;
+                }
+            }
 
-	    var total_error = 0;
+            return dateOnly(result);
+        }
 
-	    const leaveType = $("#strLeavetype").val().toLowerCase();
-	    const leaveFrom = $("#dtmLeavefrom").val();
-	    const leaveTo = $("#dtmLeaveto").val();
-	    const today = new Date();
-	    const parsedLeaveFrom = new Date(leaveFrom);
-	    const parsedLeaveTo = new Date(leaveTo);
+        function getNextWorkingDay(date) {
+            var result = new Date(date);
 
-	    // Check required fields
-	    total_error += check_null('#dtmLeavefrom','Leave from must not be empty.');
-	    total_error += check_null('#dtmLeaveto','Leave to must not be empty.');
-	    total_error += check_null('#strCommutation',' This field must not be empty.');
+            do {
+                result.setDate(result.getDate() + 1);
+            } while (!isWorkingDay(result));
 
-	    switch (leaveType) {
-	        case 'vl':
-	            total_error += check_null('#strIncaseVL','This field must not be empty.');
-	            total_error += check_null('#strReason','This field must not be empty.');
-	            break;
-		case 'fl':
-		    total_error += check_null('#strReason','This field must not be empty.');
+            return dateOnly(result);
+        }
+
+        function hasAttachment() {
+            var fileInput = $('#userfile').get(0);
+            var hasNewAttachment = fileInput && fileInput.files && fileInput.files.length > 0;
+            var hasExistingAttachment = $('#upload-file-info a').length > 0;
+
+            return hasNewAttachment || hasExistingAttachment;
+        }
+
+        function blockSubmit(e, message) {
+            alert(message);
+            $('#btn-request-leave').attr('disabled', false);
+            e.preventDefault();
+        }
+
+        $("#frmLeave").submit(function (e) {
+            $("#btn-request-leave").attr("disabled", true);
+
+            var total_error = 0;
+
+            const leaveType = $("#strLeavetype").val().toLowerCase();
+            const leaveFrom = $("#dtmLeavefrom").val();
+            const leaveTo = $("#dtmLeaveto").val();
+            const today = new Date();
+            const parsedLeaveFrom = new Date(leaveFrom);
+            const parsedLeaveTo = new Date(leaveTo);
+
+            total_error += check_null('#dtmLeavefrom','Leave from must not be empty.');
+            total_error += check_null('#dtmLeaveto','Leave to must not be empty.');
+            total_error += check_null('#strCommutation',' This field must not be empty.');
+
+            switch (leaveType) {
+                case 'vl':
+                    total_error += check_null('#strIncaseVL','This field must not be empty.');
+                    total_error += check_null('#strReason','This field must not be empty.');
                     break;
-	        case 'sl':
-	            total_error += check_null('#strIncaseSL','This field must not be empty.');
-	            total_error += check_null('#strReason','This field must not be empty.');
-	            break;
-	        case 'stl':
-	            total_error += check_null('#strIncaseSTL','This field must not be empty.');
-	            total_error += check_null('#strReason','This field must not be empty.');
-	            break;
-	        case 'sppl':
-	            total_error += check_null('#strReason','This field must not be empty.');
-	            break;
-	    }
+                case 'fl':
+                    total_error += check_null('#strReason','This field must not be empty.');
+                    break;
+                case 'sl':
+                    total_error += check_null('#strIncaseSL','This field must not be empty.');
+                    total_error += check_null('#strReason','This field must not be empty.');
+                    break;
+                case 'stl':
+                    total_error += check_null('#strIncaseSTL','This field must not be empty.');
+                    total_error += check_null('#strReason','This field must not be empty.');
+                    break;
+                case 'sppl':
+                    total_error += check_null('#strReason','This field must not be empty.');
+                    break;
+            }
 
-	    // Validation: Restrict non-SL/sppl if filed within 5 days
-	    if (leaveType !== 'sl' && leaveType !== 'sppl') {
-	        const timeDiff = parsedLeaveFrom.getTime() - today.getTime();
-	        const diffDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            if (total_error > 0) {
+                e.preventDefault();
+                $("#btn-request-leave").attr("disabled", false);
+                return;
+            }
 
-	        if (diffDays < 5) {
-	            alert("Leave must be filed at least 5 days in advance.");
-	            $("#btn-request-leave").attr("disabled", false);
-	            e.preventDefault();
-	            return;
-	        }
-	    }
+            const todayDateOnly = dateOnly(today);
+            const leaveFromDateOnly = dateOnly(parsedLeaveFrom);
+            const leaveToDateOnly = dateOnly(parsedLeaveTo);
+            const daysApplied = parseFloat($('#intDaysApplied').val()) || 0;
 
-	    if (leaveType === 'sppl') {
-		// date-only (avoid time issues)
-       	        const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-	        const leaveFromDateOnly = new Date(parsedLeaveFrom.getFullYear(), parsedLeaveFrom.getMonth(), parsedLeaveFrom.getDate());
+            const fiveWorkingDaysBeforeLeaveTypes = ['vl', 'fl', 'wl', 'sppl', 'pl'];
 
-	        let allowedLastFilingDay = new Date(leaveFromDateOnly);
-	        allowedLastFilingDay.setDate(allowedLastFilingDay.getDate() + 5);
+            if (fiveWorkingDaysBeforeLeaveTypes.includes(leaveType)) {
+                const earliestAllowedLeaveDate = addWorkingDays(todayDateOnly, 5);
 
-	        if (todayDateOnly > allowedLastFilingDay) {
-	            alert("SPPL must be filed within 5 days from the leave date.");
-	            $("#btn-request-leave").attr("disabled", false);
-	            e.preventDefault();
-	            return;
-	        }
-	    }
+                if (leaveFromDateOnly.getTime() < earliestAllowedLeaveDate.getTime()) {
+                    blockSubmit(
+                        e,
+                        'This leave must be filed at least 5 working days before the leave date. Friday, Saturday, and Sunday are excluded from the count.'
+                    );
+                    return;
+                }
+            }
 
-	    // Validation: SL must be filed only up to return-to-office day
-	    if (leaveType === 'sl') {
-	        let returnDate = new Date(parsedLeaveTo);
-	        returnDate.setDate(returnDate.getDate() + 1);
+            if (leaveType === 'wl' && daysApplied > 3) {
+                blockSubmit(e, 'Wellness Leave is limited to a maximum of 3 consecutive days.');
+                return;
+            }
 
-	        // Strip time components
-		const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-		let allowedDate = new Date(returnDate.getFullYear(), returnDate.getMonth(), returnDate.getDate());
+            // Sick Leave:
+            // Must be filed on the first working day after the sick leave period.
+            // Under compressed work week, only Monday to Thursday are working days.
+            if (leaveType === 'sl') {
+                const allowedDate = getNextWorkingDay(leaveToDateOnly);
 
-		// If return date is Saturday or Sunday, move to next Monday
-		const day = allowedDate.getDay(); // 0 = Sunday, 6 = Saturday
-		if (day === 6) {
-		    // Saturday -> add 2 days
-		    allowedDate.setDate(allowedDate.getDate() + 2);
-		} else if (day === 0) {
-		    // Sunday -> add 1 day
-		    allowedDate.setDate(allowedDate.getDate() + 1);
-		}
+                if (todayDateOnly.getTime() > allowedDate.getTime()) {
+                    blockSubmit(
+                        e,
+                        'Sick Leave must be filed immediately upon return to work, on the first working day after the sick leave.'
+                    );
+                    return;
+                }
 
-		// Final check
-		if (todayDateOnly > allowedDate) {
-		    alert("Sick Leave must be filed on or before the next working day after return-to-office.");
-		    $("#btn-request-leave").attr("disabled", false);
-		    e.preventDefault();
-		    return;
-		}
+                if (daysApplied > 5 && !hasAttachment()) {
+                    blockSubmit(e, 'Medical Certificate is required for Sick Leave of more than 5 days.');
+                    return;
+                }
+            }
 
-	    }
+            if (leaveType === 'rpl' && todayDateOnly.getTime() > leaveFromDateOnly.getTime()) {
+                blockSubmit(e, 'Rehabilitation Privilege must be filed immediately after injury, on the same day.');
+                return;
+            }
 
-	    // File size limit check
-	    if ($('#txtdgstorage').val() && $('#txtfilesize').val()) {
-	        if ($('#txtdgstorage').val() === 'MB' && parseInt($('#txtfilesize').val()) > 100) {
-	            $('#upload-error').show();
-	            total_error += 1;
-	        }
-	    }
+            const documentRequiredLeaveTypes = ['ml', 'pl', 'spl', 'stl', 'val', 'rpl', 'slw', 'sel', 'al'];
 
-	    if (total_error > 0) {
-	        e.preventDefault();
-	        $("#btn-request-leave").attr("disabled", false);
-	    }
-	});
+            if (documentRequiredLeaveTypes.includes(leaveType) && !hasAttachment()) {
+                blockSubmit(e, 'Supporting documents are required for this leave type.');
+                return;
+            }
+
+            if ($('#txtdgstorage').val() && $('#txtfilesize').val()) {
+                if ($('#txtdgstorage').val() === 'MB' && parseInt($('#txtfilesize').val()) > 100) {
+                    $('#upload-error').show();
+                    total_error += 1;
+                }
+            }
+
+            if (total_error > 0) {
+                e.preventDefault();
+                $("#btn-request-leave").attr("disabled", false);
+            }
+        });
 
         $('#printreport').click(function(){
-0            var leavetype=$('#strLeavetype').val();
+            var leavetype=$('#strLeavetype').val();
             var day=$('#strDay').val();
             var leavefrom=$('#dtmLeavefrom').val();
             var leaveto=$('#dtmLeaveto').val();

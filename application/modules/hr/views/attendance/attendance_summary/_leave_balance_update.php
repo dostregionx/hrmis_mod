@@ -25,6 +25,7 @@
                                     <th colspan="3" style="text-align: center;">Sick Leave</th>
                                     <th style="text-align: center;vertical-align: middle;">Force Leave</th>
                                     <th  style="text-align:center;vertical-align: middle;">Special Privilege <br> Leave</th>
+				    <th style="text-align: center;vertical-align: middle;">Wellness Leave</th>
                                     <th rowspan="2" style="text-align: center;vertical-align: middle;"> Action </th>
                                 </tr>
                                 <tr>
@@ -36,6 +37,7 @@
                                     <th style="text-align: center;">ABS/ UND/ <br> WOP</th>
                                     <th style="text-align: center;">BAL</th>
                                     <th style="text-align: center;">BAL</th>
+				    <th style="text-align: center;">BAL</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -129,6 +131,16 @@
                                             }
                                         ?>
                                         </td>
+
+					<td class="text-center">
+					    <?php
+					        if ($leave_bal['wlBalance'] > 0) {
+					            echo $leave_bal['wlBalance'];
+					        } else {
+					            echo '0.000';
+					        }
+					    ?>
+					</td>
                           
                                         <td align="center" style="width: 16%;" nowrap>
                                             <button class="btn btn-sm blue" id="btn-leavebal" data-json='<?=json_encode($leave_bal,0)?>'
