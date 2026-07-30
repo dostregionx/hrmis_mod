@@ -86,7 +86,25 @@ Copyright Notice:   Copyright(C)2018 by the DOST Central Office - Information Te
                             <td align="center"> <?=$i++?> </td>
                             <td align="center"> <?=$row['requestDate']?> </td>
                             <td align="center"> <?=$row['requestStatus']?> </td>
-                            <td align="center"> <?=$req_details[14] ?? '' ?> </td>
+                            <td align="center">
+				    <?php
+				        $leave_code = $req_details[0] ?? '';
+				        $leave_name = $leave_code;
+
+				        if ($leave_code != '') {
+				            $leave_info = $this->db
+				                ->where('leaveCode', $leave_code)
+				                ->get('tblleave')
+				                ->row();
+
+				            if ($leave_info) {
+				                $leave_name = $leave_info->leaveType;
+				            }
+				        }
+
+				        echo $leave_name;
+				    ?>
+				</td>
                             <td align="center" nowrap>
                                 <?php
                                     if (isset($req_details[1]) && isset($req_details[2]) && $req_details[1] != '' && $req_details[2] != ''):
