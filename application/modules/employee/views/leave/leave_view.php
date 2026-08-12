@@ -218,7 +218,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                     </div>
                 </div>
 
-                <div class="row" id="reason_textbox" <?=$action=='add'?'hidden':''?>>
+                <div class="row" id="reason_textbox" <?=$hrmodule?'hidden':''?>>
                     <div class="col-sm-9">
                         <div class="form-group">
                             <label class="control-label">Specify Remarks / Reasons:</label>
@@ -271,7 +271,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                     </div>
                 </div> -->
 
-                <div class="row" id="attachments" <?=$action=='add' || $hrmodule?'hidden':''?>>
+                <div class="row" id="attachments" <?=$hrmodule?'hidden':''?>>
                     <br>
                     <div class="col-sm-12">
                         <div class="form-group">
@@ -521,7 +521,6 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                     break;
                 case 'stl':
                     total_error += check_null('#strIncaseSTL','This field must not be empty.');
-                    total_error += check_null('#strReason','This field must not be empty.');
                     break;
                 case 'sppl':
                     total_error += check_null('#strReason','This field must not be empty.');
@@ -583,7 +582,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                 return;
             }
 
-            const documentRequiredLeaveTypes = ['ml', 'pl', 'spl', 'stl', 'val', 'rpl', 'slw', 'sel', 'al'];
+            const documentRequiredLeaveTypes = ['ml', 'pl', 'spl', 'val', 'rpl', 'slw', 'sel', 'al'];
 
             if (documentRequiredLeaveTypes.includes(leaveType) && !hasAttachment()) {
                 blockSubmit(e, 'Supporting documents are required for this leave type.');
