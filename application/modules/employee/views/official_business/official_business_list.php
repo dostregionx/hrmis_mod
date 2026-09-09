@@ -1,5 +1,5 @@
-<?php 
-/** 
+<?php
+/**
 Purpose of file:    List page for User Account Library
 Author:             Rose Anne L. Grefaldeo
 System Name:        Human Resource Management Information System Version 10
@@ -67,7 +67,7 @@ Copyright Notice:   Copyright(C)2018 by the DOST Central Office - Information Te
                         </div>
                     </div>
                 </div>
-                <table class="table table-striped table-bordered table-condensed  table-hover table-checkable order-column" id="table-ob">
+                <table class="table table-striped table-bordered table-condensed table-hover table-checkable order-column" id="table-ob">
                     <thead>
                         <tr>
                             <th style="width: 100px;text-align:center;"> No. </th>
@@ -125,9 +125,13 @@ Copyright Notice:   Copyright(C)2018 by the DOST Central Office - Information Te
                                         echo $req_details[7];
                                     endif; ?></td>
                             <td width="150px" style="white-space: nowrap;text-align: center;">
-                                <a class="btn btn-sm grey-cascade" id="printreport" data-rdate="<?=$row['requestDate']?>"
-                                    data-rdetails='<?=$row['requestID']?>' data-rattach='<?=$row['file_location']?>'>
+                                <a class="btn btn-sm grey-cascade"
+                                   id="printreport"
+                                   data-rdate="<?=$row['requestDate']?>"
+                                   data-rdetails='<?=$row['requestID']?>'
+                                   data-rattach='<?=htmlspecialchars($row['file_location'], ENT_QUOTES, 'UTF-8')?>'>
                                     <span class="icon-magnifier" title="View"></span> View</a>
+
                                 <?php if(strtolower($row['requestStatus']) == 'filed request'): ?>
                                     <a class="btn btn-sm green" href="<?=base_url('employee/official_business/edit?req_id='.$row['requestID'])?>">
                                         <span class="fa fa-edit" title="Edit"></span> Edit</a>
@@ -168,8 +172,12 @@ Copyright Notice:   Copyright(C)2018 by the DOST Central Office - Information Te
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="" id="ob-embed-fullview" class="btn blue btn-sm" target="_blank"> <i class="glyphicon glyphicon-resize-full"> </i> Open in New Tab</a>
-                <button type="button" class="btn dark btn-sm" data-dismiss="modal"> <i class="icon-ban"> </i> Close</button>
+                <a href="" id="ob-embed-fullview" class="btn blue btn-sm" target="_blank">
+                    <i class="glyphicon glyphicon-resize-full"> </i> Open in New Tab
+                </a>
+                <button type="button" class="btn dark btn-sm" data-dismiss="modal">
+                    <i class="icon-ban"> </i> Close
+                </button>
             </div>
         </div>
     </div>
@@ -196,8 +204,12 @@ Copyright Notice:   Copyright(C)2018 by the DOST Central Office - Information Te
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="btnsubmit-adj-delete" class="btn btn-sm green"><i class="icon-check"> </i> Yes</button>
-                    <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal"><i class="icon-ban"> </i> Cancel</button>
+                    <button type="submit" id="btnsubmit-adj-delete" class="btn btn-sm green">
+                        <i class="icon-check"> </i> Yes
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">
+                        <i class="icon-ban"> </i> Cancel
+                    </button>
                 </div>
             <?=form_close()?>
         </div>
@@ -209,44 +221,79 @@ Copyright Notice:   Copyright(C)2018 by the DOST Central Office - Information Te
 
 <script>
     $(document).ready(function() {
-        $('#table-ob').dataTable( {
+        $('#table-ob').dataTable({
             "initComplete": function(settings, json) {
                 $('.loading-image').hide();
                 $('#div-ob_request').show();
-            }} );
+            }
+        });
 
-        /* ellipsis*/
+        /* ellipsis */
         $('#table-ob').on('click', 'a.showmore', function() {
             $(this).closest('td').find('.fulltext,a.showless').show();
             $(this).prev().prev('.ellipsis').hide();
             $(this).hide();
         });
+
         $('#table-ob').on('click', 'a.showless', function() {
             $(this).closest('td').find('.ellipsis,a.showmore').show();
             $(this).closest('td').find('.fulltext').hide();
             $(this).hide();
         });
 
-        $('#table-ob').on('click','a#printreport',function(){
+        $('#table-ob').on('click', 'a#printreport', function() {
             var req_id = $(this).data('rdetails');
 
-            var link = "<?=base_url('employee/reports/generate/?rpt=reportOB')?>"+"&req_id="+req_id;
+            var link = "<?=base_url('employee/reports/generate/?rpt=reportOB')?>" + "&req_id=" + req_id;
+
             $('div#attachments').html('');
-            var json_file = $(this).data('rattach');
+
+            /*
+             * Get the raw data-rattach attribute.
+             * Using .attr() prevents jQuery from attempting
+             * to automatically interpret the JSON value.
+             */
+            var json_file = $(this).attr('data-rattach');
+
             $('div#attachments').append('<ul>');
-            if(json_file!=''){
-                $.each( $(this).data('rattach'), function(i,file) {
-                    var floc = "<?=base_url('"+ file.filepath +"')?>";
+
+            if (json_file && json_file.trim() !== '') {
+                try {
+                    json_file = JSON.parse(json_file);
+                } catch (e) {
+                    console.error('Invalid Official Business attachment JSON:', json_file);
+                    json_file = [];
+                }
+            } else {
+                json_file = [];
+            }
+
+            if (Array.isArray(json_file)) {
+                $.each(json_file, function(i, file) {
+
+                    if (!file || !file.filepath || !file.filename) {
+                        return;
+                    }
+
+                    var floc = "<?=base_url()?>" + file.filepath;
                     var fname = file.filename;
+
                     var ext = fname.split('.');
-                    ext = ext[ext.length-1];
-                    $('div#attachments').append('<li><a target="_blank" href="'+floc+'"><i class="fa fa-'+check_icon(ext)+'"> </i>&nbsp;'+ellipsisChar(fname, 30)+'</a></li>');
+                    ext = ext[ext.length - 1];
+
+                    $('div#attachments').append(
+                        '<li><a target="_blank" href="' + floc + '">' +
+                        '<i class="fa fa-' + check_icon(ext) + '"> </i>&nbsp;' +
+                        ellipsisChar(fname, 30) +
+                        '</a></li>'
+                    );
                 });
             }
+
             $('div#attachments').append('</ul>');
-            
-            $('#ob-embed').attr('src',link);
-            $('#ob-embed-fullview').attr('href',link);
+
+            $('#ob-embed').attr('src', link);
+            $('#ob-embed-fullview').attr('href', link);
             $('#ob-form').modal('show');
         });
 

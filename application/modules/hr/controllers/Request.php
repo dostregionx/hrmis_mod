@@ -26,6 +26,15 @@ class Request extends MY_Controller
 		$this->arrData['active_menu'] = $active_menu;
 		$this->arrData['notif_icon'] = $notif_icon;
 
+		$leaveSetting = $this->db
+        ->select('setting_value')
+        ->where('setting_key', 'leave_filing_restrictions')
+        ->get('tblhrsettings')
+        ->row_array();
+
+$this->arrData['leave_filing_restrictions'] =
+        $leaveSetting ? (int)$leaveSetting['setting_value'] : 1;
+
 		$request_type = $_GET['request'];
 
 		if ($request_type == 'ob') :
@@ -298,6 +307,43 @@ class Request extends MY_Controller
 
 		$this->template->load('template/template_view', 'hr/request/view_list', $this->arrData);
 	}
+
+	public function toggle_leave_filing_restrictions()
+{
+    if (check_module() != 'hr') {
+        show_error('Unauthorized access.', 403);
+        return;
+    }
+
+    $current = $this->db
+        ->select('setting_value')
+        ->where('setting_key', 'leave_filing_restrictions')
+        ->get('tblhrsettings')
+        ->row_array();
+
+    $currentValue = isset($current['setting_value'])
+        ? (int)$current['setting_value']
+        : 1;
+
+    $newValue = ($currentValue === 1) ? 0 : 1;
+
+    $this->db
+        ->where('setting_key', 'leave_filing_restrictions')
+        ->update('tblhrsettings', array(
+            'setting_value' => $newValue,
+            'updated_by'    => $_SESSION['sessEmpNo'],
+            'updated_at'    => date('Y-m-d H:i:s')
+        ));
+
+    $this->session->set_flashdata(
+        'strSuccessMsg',
+        $newValue
+            ? 'Leave filing date restrictions have been ENABLED.'
+            : 'Leave filing date restrictions have been DISABLED.'
+    );
+
+    redirect('hr/request?request=leave&status=All');
+}
 
 	public function update_ob()
 	{

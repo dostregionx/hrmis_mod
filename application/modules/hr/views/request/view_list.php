@@ -31,6 +31,26 @@
                             <i class="icon-doc font-dark"></i>
                             <span class="caption-subject bold uppercase"> Request</span>
                         </div>
+
+			<?php if ($request == 'leave'): ?>
+    <div class="actions">
+        <?php if ((int)$leave_filing_restrictions === 1): ?>
+            <a href="<?=base_url('hr/request/toggle_leave_filing_restrictions')?>"
+               class="btn btn-danger"
+               onclick="return confirm('Disable leave filing date restrictions for ALL employees?');">
+                <i class="fa fa-unlock"></i>
+                Disable Leave Filing Restrictions
+            </a>
+        <?php else: ?>
+            <a href="<?=base_url('hr/request/toggle_leave_filing_restrictions')?>"
+               class="btn btn-success"
+               onclick="return confirm('Enable leave filing date restrictions for ALL employees?');">
+                <i class="fa fa-lock"></i>
+                Enable Leave Filing Restrictions
+            </a>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
                     </div>
                     <div class="loading-image"><center><img src="<?=base_url('assets/images/spinner-blue.gif')?>"></center></div>
                     <div class="portlet-body"  id="request_view" style="display: none">
