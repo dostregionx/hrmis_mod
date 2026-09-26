@@ -22,7 +22,7 @@
                     <span class="caption-subject bold uppercase"> <i class="icon-list"></i> Tasks</span>
                 </div>
             </div>
-            
+
             <div class="portlet-body">
                 <div class="row">
                     <div class="tabbable-line tabbable-full-width col-md-12">
@@ -32,33 +32,24 @@
                                     <div class="form-group" style="display: inline-flex;">
                                         <label style="padding: 6px;">Month</label>
                                         <select class="bs-select form-control" name="month">
-                                            <option value="all">All</option>
-                                            <?php foreach (range(1, 12) as $m): ?>
-                                                <option value="<?=sprintf('%02d', $m)?>"
-                                                    <?php 
-                                                        if(isset($_GET['month'])):
-                                                            echo $_GET['month'] == $m ? 'selected' : '';
-                                                        else:
-                                                            echo $m == sprintf('%02d', date('n')) ? 'selected' : '';
-                                                        endif;
-                                                     ?> >
-                                                    <?=date('F', mktime(0, 0, 0, $m, 10))?></option>
+                                            <option value="all" <?=($strMonth === 'all' || $strMonth === '') ? 'selected' : ''?>>All</option>
+                                            <?php foreach (range(1, 12) as $m): 
+                                                $formatted_m = sprintf('%02d', $m);
+                                                $selected = ($strMonth !== 'all' && $strMonth !== '' && (int)$strMonth === $m) ? 'selected' : '';
+                                            ?>
+                                                <option value="<?=$formatted_m?>" <?=$selected?>>
+                                                    <?=date('F', mktime(0, 0, 0, $m, 10))?>
+                                                </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="form-group" style="display: inline-flex;margin-left: 10px;">
                                         <label style="padding: 6px;">Year</label>
                                         <select class="bs-select form-control" name="yr">
-                                            <?php foreach (getYear() as $yr): ?>
-                                                <option value="<?=$yr?>"
-                                                    <?php 
-                                                        if(isset($_GET['yr'])):
-                                                            echo $_GET['yr'] == $yr ? 'selected' : '';
-                                                        else:
-                                                            echo $yr == date('Y') ? 'selected' : '';
-                                                        endif;
-                                                     ?> >  
-                                                <?=$yr?></option>
+                                            <?php foreach (getYear() as $yr): 
+                                                $yr_selected = ($strYear == $yr) ? 'selected' : '';
+                                            ?>
+                                                <option value="<?=$yr?>" <?=$yr_selected?>><?=$yr?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -90,31 +81,31 @@
                             </thead>
                             <tbody>
                                 <?php $no=1; foreach($allemp_request as $request): ?>
-				    <?php if (strtolower($request['req_status']) == 'cancelled') continue; ?>
-                                    
-                                    	<tr class="<?=strtolower($request['req_status']) == 'cancelled'? 'cancelled':''?> <?=strtolower($request['req_status']) == 'disapproved'? 'disapproved':''?>">
-	                                        <td align="center"><?=$no++?></td>
-	                                        <td><?=employee_name($request['req_emp'])?></td>
-	                                        <td align="center"><?=date('F d, Y',strtotime($request['req_date']))?></td>
-	                                        <td align="center"><?=$request['req_type']?></td>
-	                                        <td align="center"><?=$request['req_status']?></td>
-	                                        <td align="center"><?=$request['req_remarks']?></td>
-	                                        <td><?=$request['req_desti']?></td>
-	                                        <td nowrap style="vertical-align: middle;text-align: center;">
-	                                        <a class="btn btn-sm grey-cascade" onclick="print_report(this)" data-requesttype="<?=$request['req_code']?>" data-rdate="<?=$request['req_date']?>"
-	                                            data-requestid="<?=$request['req_id']?>">
-	                                                <span class="icon-magnifier" title="View"></span> View Document</a>
-	                                        <?php if (strtoupper($request['req_status']) != strtoupper('Cancelled')) {
-	                                            ?>
-	                                            
-                                                <a href="javascript:;" onclick="view_details(this)" class="btn btn-sm blue" data-json='<?= htmlspecialchars(json_encode($request), ENT_QUOTES, 'UTF-8') ?>'><i class="icon-magnifier"></i> View Details 
-						</a>
+                                    <?php if (strtolower($request['req_status']) == 'cancelled') continue; ?>
 
-                                            
-                                            	<?php
-                                        	}?>
-                                        	</td>
-                                    	</tr>
+                                        <tr class="<?=strtolower($request['req_status']) == 'cancelled'? 'cancelled':''?> <?=strtolower($request['req_status']) == 'disapproved'? 'disapproved':''?>">
+                                                <td align="center"><?=$no++?></td>
+                                                <td><?=employee_name($request['req_emp'])?></td>
+                                                <td align="center"><?=date('F d, Y',strtotime($request['req_date']))?></td>
+                                                <td align="center"><?=$request['req_type']?></td>
+                                                <td align="center"><?=$request['req_status']?></td>
+                                                <td align="center"><?=$request['req_remarks']?></td>
+                                                <td><?=$request['req_desti']?></td>
+                                                <td nowrap style="vertical-align: middle;text-align: center;">
+                                                <a class="btn btn-sm grey-cascade" onclick="print_report(this)" data-requesttype="<?=$request['req_code']?>" data-rdate="<?=$request['req_date']?>"
+                                                    data-requestid="<?=$request['req_id']?>">
+                                                        <span class="icon-magnifier" title="View"></span> View Document</a>
+                                                <?php if (strtoupper($request['req_status']) != strtoupper('Cancelled')) {
+                                                    ?>
+
+                                                <a href="javascript:;" onclick="view_details(this)" class="btn btn-sm blue" data-json='<?= htmlspecialchars(json_encode($request), ENT_QUOTES, 'UTF-8') ?>'><i class="icon-magnifier"></i> View Details
+                                                </a>
+
+
+                                                <?php
+                                                }?>
+                                                </td>
+                                        </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>

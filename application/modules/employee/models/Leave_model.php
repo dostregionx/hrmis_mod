@@ -1,9 +1,9 @@
 <?php
 /**
 Purpose of file:    Model for Leave
-Author:             Rose Anne L. Grefaldeo
-System Name:        Human Resource Management Information System Version 10
-Copyright Notice:   Copyright(C)2018 by the DOST Central Office - Information Technology Division
+Author:            Rose Anne L. Grefaldeo
+System Name:       Human Resource Management Information System Version 10
+Copyright Notice:  Copyright(C)2018 by the DOST Central Office - Information Technology Division
 **/
 ?>
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
@@ -27,7 +27,6 @@ class Leave_model extends CI_Model {
                 else:
                         return $this->db->get('tblemprequest')->result_array();
                 endif;
-
         }
 
         function getall_request($empno = '')
@@ -161,17 +160,17 @@ class Leave_model extends CI_Model {
         function ltut_table_equiv($ltut)
         {
                 $arrequiv = array("0"  => 0.000, "1"  => 0.002, "2"  => 0.004,"3"  => 0.006,"4"  => 0.008,"5"  => 0.010,
-                                                  "6"  => 0.012, "7"  => 0.015, "8"  => 0.017,"9"  => 0.019,"10" => 0.021,
-                                                  "11" => 0.023, "12" => 0.025, "13" => 0.027,"14" => 0.029,"15" => 0.031,
-                                                  "16" => 0.033, "17" => 0.035, "18" => 0.037,"19" => 0.040,"20" => 0.042,
-                                                  "21" => 0.044, "22" => 0.046, "23" => 0.048,"24" => 0.050,"25" => 0.052,
-                                                  "26" => 0.054, "27" => 0.056, "28" => 0.058,"29" => 0.060,"30" => 0.062,
-                                                  "31" => 0.065, "32" => 0.067, "33" => 0.069,"34" => 0.071,"35" => 0.073,
-                                                  "36" => 0.075, "37" => 0.077, "38" => 0.079,"39" => 0.081,"40" => 0.083,
-                                                  "41" => 0.085, "42" => 0.087, "43" => 0.090,"44" => 0.092,"45" => 0.094,
-                                                  "46" => 0.096, "47" => 0.098, "48" => 0.100,"49" => 0.102,"50" => 0.104,
-                                                  "51" => 0.106, "52" => 0.108, "53" => 0.110,"54" => 0.112,"55" => 0.115,
-                                                  "56" => 0.117, "57" => 0.119, "58" => 0.121,"59" => 0.123,"60" => 0.125);
+                                  "6"  => 0.012, "7"  => 0.015, "8"  => 0.017,"9"  => 0.019,"10" => 0.021,
+                                  "11" => 0.023, "12" => 0.025, "13" => 0.027,"14" => 0.029,"15" => 0.031,
+                                  "16" => 0.033, "17" => 0.035, "18" => 0.037,"19" => 0.040,"20" => 0.042,
+                                  "21" => 0.044, "22" => 0.046, "23" => 0.048,"24" => 0.050,"25" => 0.052,
+                                  "26" => 0.054, "27" => 0.056, "28" => 0.058,"29" => 0.060,"30" => 0.062,
+                                  "31" => 0.065, "32" => 0.067, "33" => 0.069,"34" => 0.071,"35" => 0.073,
+                                  "36" => 0.075, "37" => 0.077, "38" => 0.079,"39" => 0.081,"40" => 0.083,
+                                  "41" => 0.085, "42" => 0.087, "43" => 0.090,"44" => 0.092,"45" => 0.094,
+                                  "46" => 0.096, "47" => 0.098, "48" => 0.100,"49" => 0.102,"50" => 0.104,
+                                  "51" => 0.106, "52" => 0.108, "53" => 0.110,"54" => 0.112,"55" => 0.115,
+                                  "56" => 0.117, "57" => 0.119, "58" => 0.121,"59" => 0.123,"60" => 0.125);
                 $hrs = 0;
                 $mins = 0;
                 if($ltut > 0):
@@ -226,77 +225,8 @@ class Leave_model extends CI_Model {
         }
 
         /* ============================================================
-         * NEW: Generic leave cap/credit enforcement (ALL leave types)
+         * HR Balance Check & Default Limits
          * ============================================================ */
-
-        public function get_leave_type_limit($leaveCode)
-        {
-                $leaveCode = strtoupper(trim($leaveCode));
-                $row = $this->db->get_where('tblleave', array('leaveCode' => $leaveCode))->row_array();
-                if (!$row) return 0;
-
-                if (isset($row['numOfDays'])) return (int)$row['numOfDays'];
-                if (isset($row['numberOfDays'])) return (int)$row['numberOfDays'];
-                if (isset($row['numdays'])) return (int)$row['numdays'];
-                return 0;
-        }
-
-        private function sum_approved_days_year($empNo, $leaveCode, $year)
-        {
-                $empNo = trim($empNo);
-                $leaveCode = strtoupper(trim($leaveCode));
-                $year = (int)$year;
-
-                $this->db->where('empNumber', $empNo);
-                $this->db->where('leaveCode', $leaveCode);
-                $this->db->where('certifyHR', 'Y');
-                $this->db->where('YEAR(leaveFrom) =', $year, false);
-
-                $rows = $this->db->get('tblempleave')->result_array();
-
-                $days = 0.0;
-                foreach($rows as $leave):
-                        //$dates = dateRange($leave['leaveFrom'],$leave['leaveTo']);
-			$dates = $this->dateRange($leave['leaveFrom'], $leave['leaveTo']);
-                        $days += (float)count($dates);
-                endforeach;
-
-                return $days;
-        }
-
-        private function sum_pending_days_year_from_requests($empNo, $leaveCode, $year, $excludeReqId = null)
-        {
-                $empNo = trim($empNo);
-                $leaveCode = strtoupper(trim($leaveCode));
-                $year = (int)$year;
-
-                $this->db->select('COALESCE(SUM(CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(e.requestDetails, ";", 4), ";", -1) AS DECIMAL(10,3))),0) AS total', false);
-                $this->db->from('tblemprequest e');
-                $this->db->where('e.empNumber', $empNo);
-                $this->db->where('e.requestCode', 'Leave');
-                $this->db->where('e.requestStatus', 'Filed Request');
-
-                // ✅ FIX: escape leaveCode properly so it becomes ='WL'
-                $this->db->where(
-                        'UPPER(LEFT(e.requestDetails, LOCATE(";", e.requestDetails) - 1)) = '.$this->db->escape($leaveCode),
-                        null,
-                        false
-                );
-
-                // YEAR(...) = 2026 is OK without quotes
-                $this->db->where(
-                        'YEAR(SUBSTRING_INDEX(SUBSTRING_INDEX(e.requestDetails, ";", 2), ";", -1)) = '.$year,
-                        null,
-                        false
-                );
-
-                if (!empty($excludeReqId)) {
-                        $this->db->where('e.requestID !=', $excludeReqId);
-                }
-
-                $row = $this->db->get()->row_array();
-                return $row ? (float)$row['total'] : 0.0;
-        }
 
         public function validate_leave_request_limits($empNo, $leaveCode, $leaveFrom, $leaveTo, $daysApplied, $excludeReqId = null)
         {
@@ -312,91 +242,116 @@ class Leave_model extends CI_Model {
                         return array('ok' => false, 'msg' => 'Invalid number of days applied.');
                 }
 
-                $year = (int)date('Y', strtotime($leaveFrom));
-
-                // VL/SL: credit-based check
-                if ($leaveCode === 'VL' || $leaveCode === 'SL') {
-                        $bal = $this->getLatestBalance($empNo);
-                        if (!$bal) {
-                                return array('ok' => false, 'msg' => 'No set leave balance. Please contact HR Unit.');
-                        }
-
-                        $available = 0.0;
-                        if ($leaveCode === 'VL') $available = isset($bal['vlBalance']) ? (float)$bal['vlBalance'] : 0.0;
-                        if ($leaveCode === 'SL') $available = isset($bal['slBalance']) ? (float)$bal['slBalance'] : 0.0;
-
-                        if ($daysApplied > $available + 1e-9) {
-                                return array(
-                                        'ok' => false,
-                                        'msg' => $leaveCode.' credits insufficient. Available: '.$available.' day(s). Requested: '.$daysApplied.' day(s).'
-                                );
-                        }
+                // Bypass balance check for special leaves subject to manual HR review
+                $unlimitedLeaveTypes = array('STL', 'VAL', 'RPL', 'SLW', 'SEL', 'AL');
+                if (in_array($leaveCode, $unlimitedLeaveTypes)) {
                         return array('ok' => true, 'msg' => '');
                 }
 
-                // Other leave types: annual cap if configured
-                $limit = (int)$this->get_leave_type_limit($leaveCode);
+                // Field map corresponding to tblempleavebalance columns
+                $fieldMap = array(
+                    'VL'   => 'vlBalance',   // Vacation Leave
+                    'SL'   => 'slBalance',   // Sick Leave
+                    'FL'   => 'flBalance',   // Mandatory/Forced Leave
+                    'WL'   => 'wlBalance',   // Wellness Leave
+                    'SPPL' => 'plBalance',   // Special Privilege Leave
+                    'SPL'  => 'splBalance',  // Solo Parent Leave
+                    'ML'   => 'mtlBalance',  // Maternity Leave
+                    'PL'   => 'ptlBalance'   // Paternity Leave
+                );
 
-                if ($limit > 0) {
-                        $approved = $this->sum_approved_days_year($empNo, $leaveCode, $year);
-                        $pending  = $this->sum_pending_days_year_from_requests($empNo, $leaveCode, $year, $excludeReqId);
+                $available = 0.0;
+                $hasRecord = false;
 
-                        $wouldTotal = $approved + $pending + $daysApplied;
+                // Retrieve HR-managed balance entry if present
+                $bal = $this->getLatestBalance($empNo);
+                if ($bal) {
+                        $hasRecord = true;
+                        $codeKey = strtolower($leaveCode);
 
-                        if ($wouldTotal > $limit + 1e-9) {
-                                return array(
-                                        'ok' => false,
-                                        'msg' => $leaveCode.' limit exceeded for '.$year.'. Allowed: '.$limit.
-                                                 ' day(s). Approved: '.$approved.
-                                                 ' day(s), Pending: '.$pending.
-                                                 ' day(s), This request: '.$daysApplied.' day(s).'
-                                );
+                        if (isset($fieldMap[$leaveCode]) && isset($bal[$fieldMap[$leaveCode]])) {
+                                $available = (float)$bal[$fieldMap[$leaveCode]];
+                        } elseif (isset($bal[$codeKey])) {
+                                $available = (float)$bal[$codeKey];
+                        } elseif (isset($bal[$codeKey.'Balance'])) {
+                                $available = (float)$bal[$codeKey.'Balance'];
                         }
+                }
+
+                // Fallback: Check default max days in tblleave if balance is unrecorded or zero
+                if (!$hasRecord || $available <= 0) {
+                        $limit = $this->get_leave_type_limit($leaveCode);
+                        if (!empty($limit) && isset($limit[0]['numOfDays']) && (float)$limit[0]['numOfDays'] > 0) {
+                                $available = (float)$limit[0]['numOfDays'];
+                        }
+                }
+
+                // Reject only if requested days exceed available balance/limit
+                if ($daysApplied > $available + 1e-9) {
+                        return array(
+                                'ok' => false,
+                                'msg' => $leaveCode.' credits insufficient. Available: '.$available.' day(s). Requested: '.$daysApplied.' day(s).'
+                        );
                 }
 
                 return array('ok' => true, 'msg' => '');
         }
 
-	public function approved_leave($empid, $datefrom, $dateto, $leaveCode)
-	{
-	        $this->db->where('empNumber', $empid);
-	        $this->db->where('leaveCode', strtoupper(trim($leaveCode)));
-	        $this->db->where('certifyHR', 'Y');
-	        $this->db->where("(leaveFrom <= '".$dateto."' AND leaveTo >= '".$datefrom."')");
+        public function approved_leave($empid, $datefrom, $dateto, $leaveCode)
+        {
+                $this->db->where('empNumber', $empid);
+                $this->db->where('leaveCode', strtoupper(trim($leaveCode)));
+                $this->db->where('certifyHR', 'Y');
+                $this->db->where("(leaveFrom <= '".$dateto."' AND leaveTo >= '".$datefrom."')");
 
-	        $rows = $this->db->get('tblempleave')->result_array();
+                $rows = $this->db->get('tblempleave')->result_array();
 
-	        $total = 0.000;
+                $total = 0.000;
 
-	        foreach ($rows as $leave):
-	                //$dates = dateRange($leave['leaveFrom'], $leave['leaveTo']);
-			$dates = $this->dateRange($leave['leaveFrom'], $leave['leaveTo']);
+                foreach ($rows as $leave):
+                        $dates = $this->dateRange($leave['leaveFrom'], $leave['leaveTo']);
 
-	                foreach ($dates as $d):
-	                        if ($d >= $datefrom && $d <= $dateto):
-	                                $day = date('D', strtotime($d));
-	                                if (!in_array($day, array('Sat', 'Sun'))):
-	                                        $total += 1;
-	                                endif;
-	                        endif;
-	                endforeach;
-	        endforeach;
+                        foreach ($dates as $d):
+                                if ($d >= $datefrom && $d <= $dateto):
+                                        $day = date('D', strtotime($d));
+                                        if (!in_array($day, array('Sat', 'Sun'))):
+                                                $total += 1;
+                                        endif;
+                                endif;
+                        endforeach;
+                endforeach;
 
-	        return $total;
-	}
+                return $total;
+        }
 
-	private function dateRange($start, $end)
-	{
-        	$dates = array();
+        private function dateRange($start, $end)
+        {
+                $dates = array();
 
-        	$current = strtotime($start);
-        	$end = strtotime($end);
+                $current = strtotime($start);
+                $end = strtotime($end);
 
-        	while ($current <= $end) {
-                	$dates[] = date('Y-m-d', $current);
-                	$current = strtotime('+1 day', $current);
-        	}
+                while ($current <= $end) {
+                        $dates[] = date('Y-m-d', $current);
+                        $current = strtotime('+1 day', $current);
+                }
 
-        	return $dates;
-	}
+                return $dates;
+        }
+
+        /**
+         * Get leave type limit from tblleave
+         *
+         * @param string $code
+         * @return array|null
+         */
+        public function get_leave_type_limit($code = '')
+        {
+                if (!empty($code)) {
+                        $this->db->where('leaveCode', $code);
+                }
+
+                $query = $this->db->get('tblleave');
+                return $query->result_array();
+        }
 }

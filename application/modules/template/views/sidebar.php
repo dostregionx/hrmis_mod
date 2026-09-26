@@ -428,7 +428,7 @@ $user_session = $this->session->userdata();
                     </ul>
                 </li>
                 <li class="nav-item <?=$active=='officer' && $activesub=='tasks' ? 'active' : ''?>">
-                    <a href="<?=base_url(check_module() == 'officer' ? 'officer/tasks' : 'officer/tasks/task_executive').'?month='.currmo().'&yr='.curryr()?>">
+                    <a href="<?=base_url(check_module() == 'officer' ? 'officer/tasks' : 'officer/tasks/task_executive')?>">
                         <i class="icon-list"></i>
                         <span class="title">Tasks</span>
                     </a>
