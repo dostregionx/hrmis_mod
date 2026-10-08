@@ -81,10 +81,10 @@ class Travel_order extends MY_Controller {
             $selemps = implode('/', $arrPost['selemps']);
             $travelorderno = generate_travel_order_no();
 
-            $strDestination = isset($arrPost['strDestination']) ? $arrPost['strDestination'] : '';
+            $strDestination = isset($arrPost['strDestination']) ? str_replace(';', ',', $arrPost['strDestination']) : '';
             $dtmTOdatefrom  = isset($arrPost['dtmTOdatefrom']) ? $arrPost['dtmTOdatefrom'] : '';
             $dtmTOdateto    = isset($arrPost['dtmTOdateto']) ? $arrPost['dtmTOdateto'] : '';
-            $strPurpose     = isset($arrPost['strPurpose']) ? $arrPost['strPurpose'] : '';
+            $strPurpose     = isset($arrPost['strPurpose']) ? str_replace(';', ',', $arrPost['strPurpose']) : '';
             $strStatus      = isset($arrPost['strStatus']) ? $arrPost['strStatus'] : '';
             $strCode        = isset($arrPost['strCode']) ? $arrPost['strCode'] : '';
 
@@ -215,10 +215,10 @@ class Travel_order extends MY_Controller {
 
         if(!empty($arrPost)):
 
-            $strDestination = isset($arrPost['strDestination']) ? $arrPost['strDestination'] : '';
+            $strDestination = isset($arrPost['strDestination']) ? str_replace(';', ',', $arrPost['strDestination']) : '';
             $dtmTOdatefrom  = isset($arrPost['dtmTOdatefrom']) ? $arrPost['dtmTOdatefrom'] : '';
             $dtmTOdateto    = isset($arrPost['dtmTOdateto']) ? $arrPost['dtmTOdateto'] : '';
-            $strPurpose     = isset($arrPost['strPurpose']) ? $arrPost['strPurpose'] : '';
+            $strPurpose     = isset($arrPost['strPurpose']) ? str_replace(';', ',', $arrPost['strPurpose']) : '';
             $strMeal        = isset($arrPost['strMeal']) ? $arrPost['strMeal'] : '';
             $strStatus      = isset($arrPost['strStatus']) ? $arrPost['strStatus'] : '';
             $strCode        = isset($arrPost['strCode']) ? $arrPost['strCode'] : '';
