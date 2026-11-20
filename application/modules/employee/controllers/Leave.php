@@ -132,7 +132,10 @@ class Leave extends MY_Controller {
                                                 $path_parts = pathinfo($_FILES['userfile']['name'][$i]);
                                                 $tmp_file = $_FILES['userfile']['tmp_name'][$i];
                                                 $config['upload_path']   = 'uploads/employees/attachments/leave/'.$arrPost['txtempno'].'/';
-                                                $config['allowed_types'] = '*';
+                                                $config['allowed_types'] = 'pdf|jpg|jpeg|png|doc|docx|xls|xlsx';
+                            $config['detect_mime'] = TRUE;
+                            $config['mod_mime_fix'] = TRUE;
+                            $config['max_size'] = 102400;
                                                 $config['file_name'] = uniqid().'.'.$path_parts['extension'];
                                                 $config['overwrite'] = TRUE;
 
@@ -143,11 +146,31 @@ class Leave extends MY_Controller {
                                                         mkdir($config['upload_path'], 0777, TRUE);
                                                 endif;
 
-                                                if(!move_uploaded_file($tmp_file, $config['upload_path'].$config['file_name'])):
+                                                // Validate one attachment from the multi-file input.
+                            $_FILES['hrmis_validated_attachment'] = array(
+                                'name' => $_FILES['userfile']['name'][$i],
+                                'type' => isset($_FILES['userfile']['type'][$i])
+                                    ? $_FILES['userfile']['type'][$i] : '',
+                                'tmp_name' => $tmp_file,
+                                'error' => isset($_FILES['userfile']['error'][$i])
+                                    ? $_FILES['userfile']['error'][$i] : UPLOAD_ERR_NO_FILE,
+                                'size' => isset($_FILES['userfile']['size'][$i])
+                                    ? $_FILES['userfile']['size'][$i] : 0
+                            );
+                            if (!$this->upload->do_upload('hrmis_validated_attachment')):
+
                                                         $this->session->set_flashdata('strErrorMsg','Error in uploading attachment. Please try again!');
-                                                else:
+
+                                unset($_FILES['hrmis_validated_attachment']);
+                                continue;
+                            else:
+
                                                         $this->session->set_flashdata('strSuccessMsg','Upload successfully saved.');
-                                                endif;
+
+                                $validatedUpload = $this->upload->data();
+                                $config['file_name'] = $validatedUpload['file_name'];
+                                unset($_FILES['hrmis_validated_attachment']);
+                            endif;
                                                 $attachments[] = array('fileid' => ($i+1),'filepath' => $config['upload_path'].$config['file_name'], 'filename' => $_FILES['userfile']['name'][$i]);
                                         endif;
                                 endfor;
@@ -224,7 +247,10 @@ class Leave extends MY_Controller {
                                         $path_parts = pathinfo($_FILES['userfile']['name'][$i]);
                                         $tmp_file = $_FILES['userfile']['tmp_name'][$i];
                                         $config['upload_path']   = 'uploads/employees/attachments/officialbusiness/'.$strEmpNum.'/';
-                                        $config['allowed_types'] = '*';
+                                        $config['allowed_types'] = 'pdf|jpg|jpeg|png|doc|docx|xls|xlsx';
+                            $config['detect_mime'] = TRUE;
+                            $config['mod_mime_fix'] = TRUE;
+                            $config['max_size'] = 102400;
                                         $config['file_name'] = uniqid().'.'.$path_parts['extension'];
                                         $config['overwrite'] = TRUE;
 
@@ -236,11 +262,31 @@ class Leave extends MY_Controller {
                                                 mkdir($config['upload_path'], 0777, TRUE);
                                         endif;
 
-                                        if(!move_uploaded_file($tmp_file, $config['upload_path'].$config['file_name'])):
+                                        // Validate one attachment from the multi-file input.
+                            $_FILES['hrmis_validated_attachment'] = array(
+                                'name' => $_FILES['userfile']['name'][$i],
+                                'type' => isset($_FILES['userfile']['type'][$i])
+                                    ? $_FILES['userfile']['type'][$i] : '',
+                                'tmp_name' => $tmp_file,
+                                'error' => isset($_FILES['userfile']['error'][$i])
+                                    ? $_FILES['userfile']['error'][$i] : UPLOAD_ERR_NO_FILE,
+                                'size' => isset($_FILES['userfile']['size'][$i])
+                                    ? $_FILES['userfile']['size'][$i] : 0
+                            );
+                            if (!$this->upload->do_upload('hrmis_validated_attachment')):
+
                                                 $this->session->set_flashdata('strErrorMsg','Please try again!');
-                                        else:
+
+                                unset($_FILES['hrmis_validated_attachment']);
+                                continue;
+                            else:
+
                                                 $this->session->set_flashdata('strSuccessMsg','Upload successfully saved.');
-                                        endif;
+
+                                $validatedUpload = $this->upload->data();
+                                $config['file_name'] = $validatedUpload['file_name'];
+                                unset($_FILES['hrmis_validated_attachment']);
+                            endif;
                                         $attachments[] = array('fileid' => $attachment_id,'filepath' => $config['upload_path'].$config['file_name'], 'filename' => $_FILES['userfile']['name'][$i]);
                                 endif;
                         endfor;

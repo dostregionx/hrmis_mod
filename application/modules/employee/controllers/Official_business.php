@@ -63,7 +63,7 @@ class Official_business extends MY_Controller {
 
 		$arrPost = $this->input->post();
 
-		
+
 		if(!empty($arrPost)):
 			$strEmpNum 		  = $_SESSION['sessEmpNo'];
 			$strOBtype		  = $arrPost['strOBtype'];
@@ -84,7 +84,7 @@ class Official_business extends MY_Controller {
 					$attachments = $arrob['file_location']!='' ? json_decode($arrob['file_location'],true) : array();
 					$attachment_id = count($attachments) > 0 ? max(array_column($attachments,'fileid')) : 0;
 					$total = count($_FILES['userfile']['name']);
-					
+
 					if($_FILES['userfile']['name'][0]!=''):
 
 						for($i=0; $i < $total; $i++):
@@ -92,25 +92,48 @@ class Official_business extends MY_Controller {
 								$path_parts = pathinfo($_FILES['userfile']['name'][$i]);
 								$tmp_file = $_FILES['userfile']['tmp_name'][$i];
 								$config['upload_path']   = 'uploads/employees/attachments/officialbusiness/'.$strEmpNum.'/';
-								$config['allowed_types'] = '*';
+								$config['allowed_types'] = 'pdf|jpg|jpeg|png|doc|docx|xls|xlsx';
+                            $config['detect_mime'] = TRUE;
+                            $config['mod_mime_fix'] = TRUE;
+                            $config['max_size'] = 102400;
 								$config['file_name'] = uniqid().'.'.$path_parts['extension']; 
 								$config['overwrite'] = TRUE;
 
 								$attachment_id = $attachment_id + 1;
 								$this->load->library('upload', $config);
 								$this->upload->initialize($config);
-									
+
 								if(!is_dir($config['upload_path'])):
 									mkdir($config['upload_path'], 0777, TRUE);
 								endif;
 
-								if(!move_uploaded_file($tmp_file, $config['upload_path'].$config['file_name'])):
+								// Validate one attachment from the multi-file input.
+                            $_FILES['hrmis_validated_attachment'] = array(
+                                'name' => $_FILES['userfile']['name'][$i],
+                                'type' => isset($_FILES['userfile']['type'][$i])
+                                    ? $_FILES['userfile']['type'][$i] : '',
+                                'tmp_name' => $tmp_file,
+                                'error' => isset($_FILES['userfile']['error'][$i])
+                                    ? $_FILES['userfile']['error'][$i] : UPLOAD_ERR_NO_FILE,
+                                'size' => isset($_FILES['userfile']['size'][$i])
+                                    ? $_FILES['userfile']['size'][$i] : 0
+                            );
+                            if (!$this->upload->do_upload('hrmis_validated_attachment')):
+
 									$error = array('error' => $this->upload->display_errors());
 									$this->session->set_flashdata('strErrorMsg','Please try again!');
-								else:
+
+                                unset($_FILES['hrmis_validated_attachment']);
+                                continue;
+                            else:
+
 									$data = $this->upload->data();
 									$this->session->set_flashdata('strSuccessMsg','Upload successfully saved.');
-								endif;
+
+                                $validatedUpload = $this->upload->data();
+                                $config['file_name'] = $validatedUpload['file_name'];
+                                unset($_FILES['hrmis_validated_attachment']);
+                            endif;
 								$attachments[] = array('fileid' => $attachment_id,'filepath' => $config['upload_path'].$config['file_name'], 'filename' => $_FILES['userfile']['name'][$i]);
 							endif;
 						endfor;
@@ -121,7 +144,7 @@ class Official_business extends MY_Controller {
 							'requestStatus'  => $strStatus,
 							'requestCode'	 => $strCode,
 							'file_location'	 => json_encode($attachments));
-					
+
 					$blnReturn  = $this->official_business_model->save($arrData,$_GET['req_id']);
 
 					if(count($blnReturn)>0):
@@ -136,7 +159,7 @@ class Official_business extends MY_Controller {
 				endif;
 			endif;
 		endif;
-		
+
 		$this->template->load('template/template_view', 'employee/official_business/official_business_view', $this->arrData);
 	}
 
@@ -156,13 +179,13 @@ class Official_business extends MY_Controller {
 		$fileid = $this->input->post('txtob_attach_id');
 		$ob = $this->official_business_model->getData($_GET['req_id']);
 		$ob_filelocation = $ob['file_location']!='' ? json_decode($ob['file_location'],true) : array();
-		
+
 		foreach($ob_filelocation as $key=>$detail):
 			if($detail['fileid']==$fileid):
 				unset($ob_filelocation[$key]);
 			endif;
 		endforeach;
-		
+
 		$arrData = array('file_location' => json_encode($ob_filelocation));
 		$this->official_business_model->save($arrData,$_GET['req_id']);
 
@@ -171,13 +194,13 @@ class Official_business extends MY_Controller {
 
 		redirect('employee/official_business/edit?req_id='.$_GET['req_id']);
 	}
-	
+
 	public function submit()
     {
     	$arrPost = $this->input->post();
 		$requestflowid = '';
 
-		
+
 		if(!empty($arrPost)):
 			$strEmpNum 		  = $_SESSION['sessEmpNo'];
 			$strOBtype		  = $arrPost['strOBtype'];
@@ -213,7 +236,7 @@ class Official_business extends MY_Controller {
 
 			if(!empty($strOBtype)):
 				if(count($this->official_business_model->checkExist($strOBtype, $dtmOBrequestdate))==0):
-					
+
 					$attachments = array();
 					if($_FILES['userfile']['name'][0]!=''):
 						$total = count($_FILES['userfile']['name']);
@@ -223,29 +246,52 @@ class Official_business extends MY_Controller {
 								$path_parts = pathinfo($_FILES['userfile']['name'][$i]);
 								$tmp_file = $_FILES['userfile']['tmp_name'][$i];
 								$config['upload_path']   = 'uploads/employees/attachments/officialbusiness/'.$strEmpNum.'/';
-								$config['allowed_types'] = '*';
+								$config['allowed_types'] = 'pdf|jpg|jpeg|png|doc|docx|xls|xlsx';
+                            $config['detect_mime'] = TRUE;
+                            $config['mod_mime_fix'] = TRUE;
+                            $config['max_size'] = 102400;
 								$config['file_name'] = uniqid().'.'.$path_parts['extension']; 
 								$config['overwrite'] = TRUE;
 
 								$this->load->library('upload', $config);
 								$this->upload->initialize($config);
-									
+
 								if(!is_dir($config['upload_path'])):
 									mkdir($config['upload_path'], 0777, TRUE);
 								endif;
 
-								if(!move_uploaded_file($tmp_file, $config['upload_path'].$config['file_name'])):
+								// Validate one attachment from the multi-file input.
+                            $_FILES['hrmis_validated_attachment'] = array(
+                                'name' => $_FILES['userfile']['name'][$i],
+                                'type' => isset($_FILES['userfile']['type'][$i])
+                                    ? $_FILES['userfile']['type'][$i] : '',
+                                'tmp_name' => $tmp_file,
+                                'error' => isset($_FILES['userfile']['error'][$i])
+                                    ? $_FILES['userfile']['error'][$i] : UPLOAD_ERR_NO_FILE,
+                                'size' => isset($_FILES['userfile']['size'][$i])
+                                    ? $_FILES['userfile']['size'][$i] : 0
+                            );
+                            if (!$this->upload->do_upload('hrmis_validated_attachment')):
+
 									$error = array('error' => $this->upload->display_errors());
 									$this->session->set_flashdata('strErrorMsg','Error in uploading attachment. Please try again!');
-								else:
+
+                                unset($_FILES['hrmis_validated_attachment']);
+                                continue;
+                            else:
+
 									$data = $this->upload->data();
 									$this->session->set_flashdata('strSuccessMsg','Upload successfully saved.');
-								endif;
+
+                                $validatedUpload = $this->upload->data();
+                                $config['file_name'] = $validatedUpload['file_name'];
+                                unset($_FILES['hrmis_validated_attachment']);
+                            endif;
 								$attachments[] = array('fileid' => ($i+1),'filepath' => $config['upload_path'].$config['file_name'], 'filename' => $_FILES['userfile']['name'][$i]);
 							endif;
 						endfor;
 					endif;
-					
+
 					$arrData = array(
 							'requestflowid' => $requestflowid,
 							'requestDetails' => $strOBtype.';'.$dtmOBrequestdate.';'.$dtmOBdatefrom.';'.$dtmOBdateto.';'.$dtmTimeFrom.';'.$dtmTimeTo.';'.$strDestination.';'.$strPurpose.';'.$strMeal,
@@ -263,7 +309,7 @@ class Official_business extends MY_Controller {
 						if ($recepient) {
 							$send = sendemail_request_to_signatory($recepient,'Official Business', date('Y-m-d'));
 						}
-					
+
 
 					if(count($blnReturn)>0):
 						log_action($this->session->userdata('sessEmpNo'),'HR Module','tblemprequest','Added '.$strOBtype.' Official Business',implode(';',$arrData),'');
