@@ -66,8 +66,12 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                                         <optgroup label="SELECT ALL">
                                         <?php
                                             foreach($arrEmployees as $emp):
-                                                $selected = isset($arrob_data) ? in_array($emp['empNumber'], array_column($arrob_data,'empNumber')) ? 'selected' : '' : '';
-                                                echo '<option value="'.$emp['empNumber'].'">'.
+                                                $selected = in_array(
+                    (string) $emp['empNumber'],
+                    explode('/', (string) ($to_details[6] ?? '')),
+                    true
+                ) ? 'selected' : '';
+                                                echo '<option value="'.$emp['empNumber'].'" '.$selected.'>'.
                                                         getfullname($emp['firstname'],$emp['surname'],$emp['middlename'],$emp['middleInitial'],$emp['nameExtension']).'</option>';
                                             endforeach; ?>
                                         </optgroup>
@@ -219,8 +223,7 @@ $hrmodule = isset($_GET['module']) ? $_GET['module'] == 'hr' ? 1 : 0 : 0;
                             <a class='btn blue-madison' href='javascript:;'>
                                 <i class="fa fa-upload"></i> Attach File
                                 <input type="file" name ="userfile[]" id= "userfile" multiple 
-                                    style='left: 16px !important;width: 108px;height: 34px;position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
-                                    name="file_source" size="40">
+                                    style='left: 16px !important;width: 108px;height: 34px;position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40">
                             </a>
                         </div>
                     </div>
@@ -493,7 +496,7 @@ $(document).ready(function() {
 <script>
 $(document).ready(function() {
     // Set default selected value if not already selected
-    const defaultEmp = '<?=$_SESSION['sessEmpNo']?>';
+    const defaultEmp = <?=json_encode($action === 'add' ? (string) $_SESSION['sessEmpNo'] : '')?>;
     const select = $('#selemps');
 
     if (select.length) {

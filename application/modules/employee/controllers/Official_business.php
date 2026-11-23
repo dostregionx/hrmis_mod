@@ -147,7 +147,7 @@ class Official_business extends MY_Controller {
 
 					$blnReturn  = $this->official_business_model->save($arrData,$_GET['req_id']);
 
-					if(count($blnReturn)>0):
+					if ($blnReturn === TRUE):
 						log_action($this->session->userdata('sessEmpNo'),'HR Module','tblemprequest','Update '.$strOBtype.' Official Business',implode(';',$arrData),'');
 						$this->session->set_flashdata('strSuccessMsg','Your request has been submitted.');
 					endif;
@@ -167,7 +167,7 @@ class Official_business extends MY_Controller {
 	{
 		$arrData = array('requestStatus' => 'Cancelled');
 		$blnReturn = $this->official_business_model->save($arrData,$_POST['txtob_req_id']);
-		if(count($blnReturn)>0):
+		if ($blnReturn === TRUE):
 			log_action($this->session->userdata('sessEmpNo'),'HR Module','tblemprequest','Cancel request id = '.$_POST['txtob_req_id'].' Official Business',implode(';',$arrData),'');
 			$this->session->set_flashdata('strSuccessMsg','Your request has been cancelled.');
 		endif;
@@ -311,7 +311,7 @@ class Official_business extends MY_Controller {
 						}
 
 
-					if(count($blnReturn)>0):
+					if ($blnReturn > 0):
 						log_action($this->session->userdata('sessEmpNo'),'HR Module','tblemprequest','Added '.$strOBtype.' Official Business',implode(';',$arrData),'');
 						$this->session->set_flashdata('strSuccessMsg','Your request has been submitted.');
 					endif;

@@ -46,7 +46,7 @@
                                             <option value="null">-- SELECT PROJECT --</option>
                                             <?php foreach($projectcode as $code): ?>
                                                 <option value="<?=$code['projectCode']?>"
-                                                    <?=isset($data) ? $data['projectCode'] == $code['projectCode'] ? 'selected' : '' : set_value('selprojdesc') == $code['projectCode'] ? 'selected' : ''?>>
+                                                    <?=((isset($data) ? ($data['projectCode'] == $code['projectCode']) : (set_value('selprojdesc') == $code['projectCode'])) ? 'selected' : '')?>>
                                                     <?=$code['projectDesc']?></option>
                                             <?php endforeach; ?>
                                         </select>

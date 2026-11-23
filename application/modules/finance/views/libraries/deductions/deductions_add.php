@@ -69,7 +69,7 @@
                                                             <option value="">-- SELECT AGENCY --</option>
                                                             <?php foreach($agency as $agency): ?>
                                                                 <option value="<?=$agency['deductionGroupCode']?>"
-                                                                    <?=isset($data) ? $agency['deductionGroupCode'] == $data['deductionGroupCode'] ? 'selected' : '' : $agency['deductionGroupCode'] == set_value('selAgency') ? 'selected' : ''?>>
+                                                                    <?=((isset($data) ? ($agency['deductionGroupCode'] == $data['deductionGroupCode']) : ($agency['deductionGroupCode'] == set_value('selAgency'))) ? 'selected' : '')?>>
                                                                     <?=$agency['deductionGroupDesc']?></option>
                                                             <?php endforeach; ?>
                                                         </select>
@@ -102,7 +102,7 @@
                                                         <select class="bs-select form-control form-required" name="seltype" id="seltype" <?=$action == 'delete' ? 'disabled' : ''?>>
                                                             <option value="">-- SELECT TYPE --</option>
                                                             <?php foreach(deduction_type() as $type): ?>
-                                                                <option value="<?=$type?>" <?=isset($data) ? $type == $data['deductionType'] ? 'selected' : '' : $type == set_value('seltype') ? 'selected' : ''?>>
+                                                                <option value="<?=$type?>" <?=((isset($data) ? ($type == $data['deductionType']) : ($type == set_value('seltype'))) ? 'selected' : '')?>>
                                                                     <?=$type?></option>
                                                             <?php endforeach; ?>
                                                         </select>
@@ -110,7 +110,7 @@
                                                 </div>
                                                 <?php if($action == 'edit'): ?>
                                                 <div class="form-group">
-                                                    <label><input type="checkbox" name="chkisactive" <?=isset($data) ? $data['hidden'] == 1 ? 'checked' : '' : ''?>>Inactive</label>
+                                                    <label><input type="checkbox" name="chkisactive" <?=(isset($data) && $data['hidden'] == 1) ? 'checked' : ''?>>Inactive</label>
                                                 </div>
                                                 <?php endif; ?>
                                                 <div class="row">

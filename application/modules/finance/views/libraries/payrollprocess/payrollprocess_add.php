@@ -45,7 +45,7 @@
                                         <select class="form-control select2 form-required" name="selappointment" id="selappointment" <?=$action=='edit' || $action=='delete' ? 'disabled' : ''?>>
                                             <option value="">-- SELECT APPOINTMENT --</option>
                                             <?php foreach($arrAppointments as $appointment): ?>
-                                                <option value="<?=$appointment['appointmentCode']?>" <?=isset($arrData) ? $appointment['appointmentCode'] == $arrData['appointmentCode'] ? 'selected' : '' : $appointment['appointmentCode'] == set_value('selappointment') ? 'selected' : ''?>>
+                                                <option value="<?=$appointment['appointmentCode']?>" <?=((isset($arrData) ? ($appointment['appointmentCode'] == $arrData['appointmentCode']) : ($appointment['appointmentCode'] == set_value('selappointment'))) ? 'selected' : '')?>>
                                                     <?=$appointment['appointmentDesc']?></option>
                                             <?php endforeach; ?>
                                         </select>
@@ -59,7 +59,7 @@
                                                 if(isset($arrData)):
                                                     foreach(explode(',', $arrData['processWith']) as $procwith):
                                                         foreach($arrAppointments as $appointment): ?>
-                                                            <option value="<?=$appointment['appointmentCode']?>" <?=isset($arrData) ? $appointment['appointmentCode'] == $procwith ? 'selected' : '' : in_array($appointment['appointmentCode'], set_value('selprocesswith')) ? 'selected' : ''?>>
+                                                            <option value="<?=$appointment['appointmentCode']?>" <?=((isset($arrData) ? ($appointment['appointmentCode'] == $procwith) : (in_array($appointment['appointmentCode'], (array) set_value('selprocesswith')))) ? 'selected' : '')?>>
                                                                 <?=$appointment['appointmentDesc']?></option>
                                             <?php       endforeach;
                                                     endforeach;
@@ -77,7 +77,7 @@
                                         <select class="form-control bs-select form-required" id="selsalary" name="selsalary" <?=$action=='delete' ? 'disabled' : ''?>>
                                             <option value="">-- SELECT SALARY --</option>
                                             <?php foreach(salaryPeriod() as $period): ?>
-                                                <option value="<?=$period?>" <?=isset($arrData) ? $period == $arrData['computation'] ? 'selected' : '' : $period == set_value('selsalary') ? 'selected' : ''?>>
+                                                <option value="<?=$period?>" <?=((isset($arrData) ? ($period == $arrData['computation']) : ($period == set_value('selsalary'))) ? 'selected' : '')?>>
                                                     <?=$period?></option>
                                             <?php endforeach; ?>
                                         </select>

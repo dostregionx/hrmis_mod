@@ -86,13 +86,13 @@ class ReportTO_rpt_model extends CI_Model
 
         $this->fpdf->SetFont('dejavusans', 'B', 9);
 
-        return utf8_decode($name);
+        return mb_convert_encoding((string) $name, 'ISO-8859-1', 'UTF-8');
     }
 
         public function show_name_regular($name){
         $this->fpdf->AddFont('dejavusans', '', 'dejavusans.php');
 
-        return utf8_decode($name);
+        return mb_convert_encoding((string) $name, 'ISO-8859-1', 'UTF-8');
     }
 
 
@@ -243,7 +243,7 @@ class ReportTO_rpt_model extends CI_Model
                 $this->fpdf->SetRightMargin(15);
                 $this->fpdf->SetTopMargin(15);
                 $this->fpdf->SetAutoPageBreak("on", 10);
-                $this->fpdf->AddPage('P', '', 'A4');
+                $this->fpdf->AddPage('P', 'A4', 0);
 
                 $this->fpdf->SetFont('Arial','',11);
 

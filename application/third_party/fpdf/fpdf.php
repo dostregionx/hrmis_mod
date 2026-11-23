@@ -2108,7 +2108,7 @@ function FancyRow($data, $border=array(), $align=array(), $style=array(), $maxli
 // end custom
 
 // begin custom fancy row small
-function FancyRow_small($height_c=7, $data, $border=array(), $align=array(), $style=array(), $maxline=array())
+function FancyRow_small($height_c, $data, $border=array(), $align=array(), $style=array(), $maxline=array())
 {
 	//Calculate the height of the row
 	$nb = 0;

@@ -168,10 +168,14 @@ class Loader
     protected function readLinesFromFile($filePath)
     {
         // Read file into an array of lines with auto-detected line endings
-        $autodetect = ini_get('auto_detect_line_endings');
-        ini_set('auto_detect_line_endings', '1');
-        $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        ini_set('auto_detect_line_endings', $autodetect);
+        $contents = file_get_contents($filePath);
+        if ($contents === false) {
+            throw new \RuntimeException('Unable to read environment file.');
+        }
+        $lines = array_values(array_filter(
+            preg_split('/\r\n|\n|\r/', $contents),
+            function ($line) { return $line !== ''; }
+        ));
 
         return $lines;
     }

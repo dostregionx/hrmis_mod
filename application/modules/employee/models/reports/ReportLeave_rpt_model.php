@@ -86,7 +86,7 @@ class ReportLeave_rpt_model extends CI_Model {
 
         $this->fpdf->SetFont('dejavusans', 'B', 9);
 
-        return utf8_decode($name);
+        return mb_convert_encoding((string) $name, 'ISO-8859-1', 'UTF-8');
     }
 
     public function generate($requestid){
@@ -105,7 +105,7 @@ class ReportLeave_rpt_model extends CI_Model {
 		$this->fpdf->SetRightMargin(15);
 		$this->fpdf->SetTopMargin(10);
 		$this->fpdf->SetAutoPageBreak("on",10);
-		$this->fpdf->AddPage('P','Legal','');
+		$this->fpdf->AddPage('P', 'Legal', 0);
 
         $this->fpdf->SetFont('Arial', "I", 8);
         $this->fpdf->Cell(0, 4, "Civil Service Form No. 6", 0, 0, "L");		

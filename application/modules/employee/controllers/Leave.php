@@ -197,7 +197,7 @@ class Leave extends MY_Controller {
 
                         $this->session->set_flashdata('strSuccessMsg','Leave has been submitted.');
 
-                        if(count($request_id)>0):
+                        if ($request_id > 0):
                                 log_action($this->session->userdata('sessEmpNo'),'HR Module','tblemprequest','Added '.$arrPost['strDay'].' Leave',implode(';',$arrData),'');
                         endif;
                         redirect('employee/leave');
@@ -214,6 +214,8 @@ class Leave extends MY_Controller {
 
     function edit()
     {
+        $this->arrData['arrLeaveTypes'] = $this->hr_model->get_leave_types();
+
         $arrleave = $this->leave_model->getData($_GET['req_id']);
         $this->arrData['arrleave'] = $arrleave;
 
@@ -305,7 +307,7 @@ class Leave extends MY_Controller {
 
                 $this->session->set_flashdata('strSuccessMsg','Leave has been updated.');
 
-                if(count($blnReturn) > 0):
+                if ($blnReturn === TRUE):
                         log_action($this->session->userdata('sessEmpNo'),'HR Module','tblemprequest','Updated request id='.$_GET['req_id'].' Leave',implode(';',$arrData),'');
                 endif;
                 redirect('employee/leave');
@@ -345,7 +347,7 @@ class Leave extends MY_Controller {
     {
         $arrData = array('requestStatus' => 'Cancelled');
         $blnReturn = $this->leave_model->save($arrData,$_POST['txtleave_req_id']);
-        if(count($blnReturn)>0):
+        if ($blnReturn === TRUE):
                 log_action($this->session->userdata('sessEmpNo'),'HR Module','tblemprequest','Cancel request id = '.$_POST['txtleave_req_id'].' Leave ',implode(';',$arrData),'');
                 $this->session->set_flashdata('strSuccessMsg','Your request has been cancelled.');
         endif;

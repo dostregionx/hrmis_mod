@@ -686,7 +686,6 @@ $leaveFilingRestrictions = $leaveSetting
                                     id="userfile"
                                     multiple
                                     style='left: 16px !important;width: 108px;height: 34px;position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
-                                    name="file_source"
                                     size="40"
                                 >
 

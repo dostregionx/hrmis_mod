@@ -206,7 +206,7 @@ class Travel_order extends MY_Controller {
                         sendemail_request_to_signatory($recepient,'Travel Order', date('Y-m-d'));
                     }
 
-                    if(count($blnReturn)>0):
+                    if ($blnReturn > 0):
                         log_action(
                             $this->session->userdata('sessEmpNo'),
                             'HR Module',
@@ -232,6 +232,8 @@ class Travel_order extends MY_Controller {
 
     public function edit()
     {
+        $this->arrData['arrEmployees'] = $this->Hr_model->getData_byGroup();
+
         $arrto = $this->travel_order_model->getData($_GET['req_id']);
         $this->arrData['arrto'] = $arrto;
         $arrPost = $this->input->post();
@@ -245,7 +247,22 @@ class Travel_order extends MY_Controller {
             $strMeal        = isset($arrPost['strMeal']) ? $arrPost['strMeal'] : '';
             $strStatus      = isset($arrPost['strStatus']) ? $arrPost['strStatus'] : '';
             $strCode        = isset($arrPost['strCode']) ? $arrPost['strCode'] : '';
-            $str_details    = $strDestination.';'.$dtmTOdatefrom.';'.$dtmTOdateto.';'.$strPurpose.';'.$strMeal;
+            // Preserve the existing Travel Order number and employee list.
+                $savedDetails = explode(';', (string) $arrto['requestDetails']);
+                $savedDetails = array_pad($savedDetails, 5, '');
+                $savedDetails[0] = $strDestination;
+                $savedDetails[1] = $dtmTOdatefrom;
+                $savedDetails[2] = $dtmTOdateto;
+                $savedDetails[3] = $strPurpose;
+                if (isset($arrPost['strMeal'])) {
+                    $savedDetails[4] = $strMeal;
+                }
+                if (isset($arrPost['selemps']) && is_array($arrPost['selemps'])
+                    && count($arrPost['selemps']) > 0) {
+                    $savedDetails = array_pad($savedDetails, 7, '');
+                    $savedDetails[6] = implode('/', $arrPost['selemps']);
+                }
+                $str_details = implode(';', $savedDetails);
 
             if(!empty($strDestination) && !empty($dtmTOdatefrom)):
                 $attachments = array();
@@ -322,7 +339,7 @@ class Travel_order extends MY_Controller {
 
                 $blnReturn = $this->travel_order_model->save($arrData,$_GET['req_id']);
 
-                if(count($blnReturn)>0):
+                if ($blnReturn === TRUE):
                     log_action(
                         $this->session->userdata('sessEmpNo'),
                         'HR Module',
@@ -376,7 +393,7 @@ class Travel_order extends MY_Controller {
         $arrData = array('requestStatus' => 'Cancelled');
         $blnReturn = $this->travel_order_model->save($arrData,$_POST['txtto_req_id']);
 
-        if(count($blnReturn)>0):
+        if ($blnReturn === TRUE):
             log_action(
                 $this->session->userdata('sessEmpNo'),
                 'HR Module',

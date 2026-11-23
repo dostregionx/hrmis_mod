@@ -59,7 +59,7 @@
                                         <select class="bs-select form-control form-required" name="selinctype" id="selinctype" <?=$action == 'delete' ? 'disabled' : ''?>>
                                             <option value="">-- SELECT INCOME TYPE --</option>
                                             <?php foreach(income_type() as $type): ?>
-                                                <option value="<?=$type?>" <?=isset($arrData) ? $type == $arrData['incomeType'] ? 'selected' : '' : $type == set_value('selinctype') ? 'selected' : ''?>>
+                                                <option value="<?=$type?>" <?=((isset($arrData) ? ($type == $arrData['incomeType']) : ($type == set_value('selinctype'))) ? 'selected' : '')?>>
                                                     <?=$type?></option>
                                             <?php endforeach; ?>
                                         </select>

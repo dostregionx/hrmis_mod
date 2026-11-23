@@ -4,50 +4,44 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita673e01514d15ec5ba668d24b8ae9b2a
+class ComposerStaticInitb53d3dfb466f6e8491a6097714e04313
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Ctype\\' => 23,
         ),
-        'D' => 
+        'D' =>
         array (
             'Dotenv\\' => 7,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Dotenv\\' => 
+        'Dotenv\\' =>
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
     );
 
-    public static $prefixesPsr0 = array (
-        'o' => 
-        array (
-            'org\\bovigo\\vfs' => 
-            array (
-                0 => __DIR__ . '/..' . '/mikey179/vfsstream/src/main/php',
-            ),
-        ),
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita673e01514d15ec5ba668d24b8ae9b2a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita673e01514d15ec5ba668d24b8ae9b2a::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInita673e01514d15ec5ba668d24b8ae9b2a::$prefixesPsr0;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb53d3dfb466f6e8491a6097714e04313::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb53d3dfb466f6e8491a6097714e04313::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitb53d3dfb466f6e8491a6097714e04313::$classMap;
 
         }, null, ClassLoader::class);
     }

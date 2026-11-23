@@ -102,7 +102,7 @@
                                         Use data from Month:&nbsp;
                                         <select class="bs-select" id="pselmon">
                                             <?php foreach (range(1, 12) as $m): ?>
-                                                <option value="<?=$m?>" <?=isset($_GET['pmon']) ? $_GET['pmon'] == $m ? 'selected' : '' : date('n') == $m ? 'selected' : ''?>>
+                                                <option value="<?=$m?>" <?=((isset($_GET['pmon']) ? ($_GET['pmon'] == $m) : (date('n') == $m)) ? 'selected' : '')?>>
                                                     <?=date('F', mktime(0, 0, 0, $m, 10))?></option>
                                             <?php endforeach; ?>
                                         </select>

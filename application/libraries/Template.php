@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Template {
+    public $CI;
 		var $template_data = array();
 		
 		function set($name, $value)

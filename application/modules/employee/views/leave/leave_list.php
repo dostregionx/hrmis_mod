@@ -79,7 +79,7 @@ Copyright Notice:   Copyright(C)2018 by the DOST Central Office - Information Te
                         </tr>
                     </thead>
                     <tbody>
-                    <?php $i=1; foreach($arrleave_request as $row): $req_details = explode(';',$row['updatedRequestDetails']);
+                    <?php $i=1; foreach($arrleave_request as $row): $req_details = explode(';', (string) ($row['updatedRequestDetails'] ?? ''));
                     
                     ?>
                         <tr class="odd gradeX">

@@ -122,7 +122,7 @@ class ReportOB_rpt_model extends CI_Model {
 		$this->fpdf->SetRightMargin(25);
 		$this->fpdf->SetTopMargin(10);
 		$this->fpdf->SetAutoPageBreak("on",10);
-		$this->fpdf->AddPage('P','','A4');
+		$this->fpdf->AddPage('P', 'A4', 0);
 		$this->fpdf->SetFont('Arial','B',12);
 		$this->fpdf->Ln(10);
 
