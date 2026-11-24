@@ -1,5 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Dtr_model extends CI_Model {
+	public $table;
+
 
 	function __construct()
 	{

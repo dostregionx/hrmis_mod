@@ -379,12 +379,7 @@
             series: [{
                     type: 'column',
                     name: 'Male',
-                    /*data: [<? for ($i = 0; $i < count($categories); $i++) {
-                                    echo ($maledata[$i] == "") ? 0 : $maledata[$i];
-                                    $totalmale += $maledata[$i];
-                                    if ($i < count($categories) - 1) echo ",";
-                                } ?>]
-                     */
+
                     <?php
                     $str = 'data: [';
                     $i = 0;
@@ -399,17 +394,12 @@
                     $str .= ']';
                     echo $str;
                     ?>
-                    // data: [0,0,0,0] 
+                    // data: [0,0,0,0]
                     //data: [110, 105, 85, 93, 80]
                 }, {
                     type: 'column',
                     name: 'Female',
-                    /*data: [<? for ($i = 0; $i < count($categories); $i++) {
-                                    echo ($femaledata[$i] == "") ? 0 : $femaledata[$i];
-                                    $totalfemale += $femaledata[$i];
-                                    if ($i < count($categories) - 1) echo ",";
-                                } ?>]
-                     */
+
                     <?php
                     $str = 'data: [';
                     $i = 0;
@@ -424,19 +414,14 @@
                     $str .= ']';
                     echo $str;
                     ?>
-                    // data: [0,0,0,0]     
+                    // data: [0,0,0,0]
                     //data: [145, 122, 90, 106, 98]
                 }, //{
                 //type: 'spline',
                 //name: 'Average',
-                /*
-                data: [<? for ($i = 0; $i < count($categories); $i++) {
-                            echo number_format((($maledata[$i] + $femaledata[$i]) / 2), 2);
-                            if ($i < count($categories) - 1) echo ",";
-                        } ?>]
-                */
+
                 //data: [127.5, 113.5, 87.5, 99.5, 89]
-                //}, 
+                //},
                 {
                     type: 'pie',
                     name: 'Total',
